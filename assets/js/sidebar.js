@@ -90,18 +90,30 @@ const SidebarComponent = {
             role = 'reports';
         }
         
-        // Calculate base path from current location to avoid duplicate path segments
-        const pathParts = window.location.pathname.split('/');
-        const simCompleteIndex = pathParts.lastIndexOf('simulation-complete');
+        // Calculate base path from current location
+        const pathParts = window.location.pathname.split('/').filter(p => p);
         
-        if (simCompleteIndex === -1) {
-            console.error('Not in simulation-complete directory');
-            return [];
+        // Determine depth: how many levels deep from root
+        // For GitHub Pages: /simulation/admin/dashboard.html -> depth = 2 (simulation, admin)
+        // For local: /admin/dashboard.html -> depth = 1 (admin)
+        
+        // Find if we're in a subdirectory
+        let depth = 0;
+        const currentFile = pathParts[pathParts.length - 1];
+        
+        // If current file is index.html or we're at root, depth = 0
+        if (currentFile === 'index.html' && pathParts.length === 1) {
+            depth = 0;
+        } else {
+            // Count directories (exclude the filename)
+            depth = pathParts.length - 1;
+            
+            // If on GitHub Pages, subtract 1 for the repo name
+            if (pathParts[0] === 'simulation' || pathParts[0].includes('github.io')) {
+                depth = Math.max(0, depth - 1);
+            }
         }
         
-        // Count how many levels deep we are from simulation-complete
-        // -2 accounts for 'simulation-complete' itself and the current file
-        const depth = pathParts.length - simCompleteIndex - 2;
         const basePath = depth > 0 ? '../'.repeat(depth) : './';
         
         const configs = {
