@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management - System Administrator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <div class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              </svg>
+            </div>
+            <span class="ml-2 text-lg font-semibold text-gray-900">Pre-Auth System</span>
+          </div>
+          <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+            <a href="dashboard.html" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              Dashboard
+            </a>
+            <a href="test-database.html" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              Tests List
+            </a>
+            <a href="user-management.html" class="border-b-2 border-purple-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              Users
+            </a>
+            <a href="system-settings.html" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              Settings
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div id="user-info" class="flex items-center"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="md:flex md:items-center md:justify-between">
+        <div class="flex-1 min-w-0">
+          <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
+          <p class="mt-1 text-sm text-gray-500">Manage system users and permissions</p>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+          <button onclick="showToast('User added successfully', 'success')" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700">
+            <svg class="mr-2 -ml-1 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            Add New User
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Filters -->
+    <div class="bg-white shadow rounded-lg mb-6 p-4">
+      <div class="flex flex-col sm:flex-row gap-4">
+        <div class="flex-1">
+          <input type="text" placeholder="Search by name or email..." class="w-full border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500">
+        </div>
+        <div class="flex gap-2">
+          <select class="border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500">
+            <option value="">All Roles</option>
+            <option value="reviewer">Reviewer</option>
+            <option value="admin">Administrator</option>
+            <option value="reports_viewer">Reports Viewer</option>
+          </select>
+          <select class="border-gray-300 rounded-md shadow-sm focus:ring-purple-500 focus:border-purple-500">
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Users Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                User
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Email
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Role
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Department
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Status
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Last Login
+              </th>
+              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-blue-600 font-semibold">LH</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">Dr. Layla Hassan</div>
+                    <div class="text-sm text-gray-500">USER-001</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                layla.hassan@insurance.com
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Reviewer
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Medical Review
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Jan 17, 2026
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="showToast('Edit user feature', 'info')" class="text-purple-600 hover:text-purple-900 mr-3">Edit</button>
+                <button onclick="showToast('User deactivated', 'success')" class="text-gray-600 hover:text-gray-900">Deactivate</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <span class="text-green-600 font-semibold">KM</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">Dr. Karim Mostafa</div>
+                    <div class="text-sm text-gray-500">USER-002</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                karim.mostafa@insurance.com
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Reviewer
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Medical Review
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Jan 17, 2026
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="showToast('Edit user feature', 'info')" class="text-purple-600 hover:text-purple-900 mr-3">Edit</button>
+                <button onclick="showToast('User deactivated', 'success')" class="text-gray-600 hover:text-gray-900">Deactivate</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-purple-100 rounded-full flex items-center justify-center">
+                    <span class="text-purple-600 font-semibold">AS</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">Ahmed Saleh</div>
+                    <div class="text-sm text-gray-500">USER-003</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                ahmed.saleh@insurance.com
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-purple-100 text-purple-800">
+                  Administrator
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                IT Administration
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Jan 16, 2026
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="showToast('Edit user feature', 'info')" class="text-purple-600 hover:text-purple-900 mr-3">Edit</button>
+                <button onclick="showToast('User deactivated', 'success')" class="text-gray-600 hover:text-gray-900">Deactivate</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-yellow-100 rounded-full flex items-center justify-center">
+                    <span class="text-yellow-600 font-semibold">NI</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">Nadia Ibrahim</div>
+                    <div class="text-sm text-gray-500">USER-004</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                nadia.ibrahim@insurance.com
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Reports Viewer
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Management
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Active
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                Jan 17, 2026
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="showToast('Edit user feature', 'info')" class="text-purple-600 hover:text-purple-900 mr-3">Edit</button>
+                <button onclick="showToast('User deactivated', 'success')" class="text-gray-600 hover:text-gray-900">Deactivate</button>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50 bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 h-10 w-10 bg-gray-200 rounded-full flex items-center justify-center">
+                    <span class="text-gray-500 font-semibold">YA</span>
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-500">Dr. Youssef Amin</div>
+                    <div class="text-sm text-gray-400">USER-005</div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                youssef.amin@insurance.com
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gray-100 text-gray-600">
+                  Reviewer
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                Medical Review
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                  Inactive
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                Dec 20, 2025
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <button onclick="showToast('User activated', 'success')" class="text-green-600 hover:text-green-900 mr-3">Activate</button>
+                <button onclick="showToast('User deleted', 'error')" class="text-red-600 hover:text-red-900">Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="../assets/js/mock-data.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>

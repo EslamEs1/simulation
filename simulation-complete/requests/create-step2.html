@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request - Patient Information - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="CreateRequestStep2">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Steps -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-green-600 text-white font-semibold">✓</div>
+                        <span class="ml-2 text-sm font-medium text-green-600">Select Test</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-blue-600 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white font-semibold">2</div>
+                        <span class="ml-2 text-sm font-medium text-blue-600">Patient Info</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">3</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Symptoms</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">4</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">ICD-10</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Justification</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">6</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Documents</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">7</div>
+                    <span class="ml-2 text-sm font-medium text-gray-500">Review</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Step 2: Patient Information</h1>
+            <p class="mt-2 text-gray-600">Enter the patient's demographic and insurance information</p>
+            <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="text-sm text-blue-800">
+                    <strong>Selected Test:</strong> <span id="selectedTestName"></span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Form -->
+        <form id="patientInfoForm" class="bg-white rounded-lg shadow p-8">
+            <div class="space-y-6">
+                <!-- Patient Name -->
+                <div>
+                    <label for="patientName" class="block text-sm font-medium text-gray-700 mb-2">
+                        Patient Full Name <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="patientName" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Enter patient's full name">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="patientNameError"></p>
+                </div>
+
+                <!-- Patient ID -->
+                <div>
+                    <label for="patientId" class="block text-sm font-medium text-gray-700 mb-2">
+                        Patient ID <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="patientId" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., PAT-123456">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="patientIdError"></p>
+                </div>
+
+                <!-- Age and Gender -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="patientAge" class="block text-sm font-medium text-gray-700 mb-2">
+                            Age <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="patientAge" required min="0" max="150"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Age in years">
+                        <p class="mt-1 text-sm text-red-600 hidden" id="patientAgeError"></p>
+                    </div>
+
+                    <div>
+                        <label for="patientGender" class="block text-sm font-medium text-gray-700 mb-2">
+                            Gender <span class="text-red-500">*</span>
+                        </label>
+                        <select id="patientGender" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                        <p class="mt-1 text-sm text-red-600 hidden" id="patientGenderError"></p>
+                    </div>
+                </div>
+
+                <!-- Insurance Number -->
+                <div>
+                    <label for="insuranceNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                        Insurance Number <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="insuranceNumber" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., INS-789012">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="insuranceNumberError"></p>
+                </div>
+
+                <!-- Contact Number (Optional) -->
+                <div>
+                    <label for="patientContact" class="block text-sm font-medium text-gray-700 mb-2">
+                        Contact Number (Optional)
+                    </label>
+                    <input type="tel" id="patientContact"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., +966 50 123 4567">
+                    <p class="mt-1 text-sm text-red-600 hidden" id="patientContactError"></p>
+                </div>
+
+                <!-- Age/Gender Restriction Warning -->
+                <div id="restrictionWarning" class="hidden p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <div class="flex items-start">
+                        <svg class="h-5 w-5 text-yellow-600 mt-0.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                        </svg>
+                        <div>
+                            <h4 class="text-sm font-semibold text-yellow-800">Restriction Warning</h4>
+                            <p class="text-sm text-yellow-700 mt-1" id="restrictionMessage"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between mt-8 pt-6 border-t border-gray-200">
+                <button type="button" onclick="goBack()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    ← Previous
+                </button>
+                <div class="flex gap-3">
+                    <button type="button" onclick="saveDraftAndExit()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                        Save Draft
+                    </button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Next: Symptoms →
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let currentTest = null;
+        let draft = null;
+
+        function initStep2() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Load draft
+            draft = loadDraft();
+            if (!draft || !draft.testId) {
+                showToast('Please select a test first', 'error');
+                setTimeout(() => window.location.href = 'create-step1.html', 2000);
+                return;
+            }
+            
+            currentTest = getTestById(draft.testId);
+            document.getElementById('selectedTestName').textContent = draft.testName;
+            
+            // Load saved data
+            if (draft.patientName) document.getElementById('patientName').value = draft.patientName;
+            if (draft.patientId) document.getElementById('patientId').value = draft.patientId;
+            if (draft.patientAge) document.getElementById('patientAge').value = draft.patientAge;
+            if (draft.patientGender) document.getElementById('patientGender').value = draft.patientGender;
+            if (draft.insuranceNumber) document.getElementById('insuranceNumber').value = draft.insuranceNumber;
+            if (draft.patientContact) document.getElementById('patientContact').value = draft.patientContact;
+            
+            // Set up real-time validation
+            setupValidation();
+            
+            // Auto-save draft every 30 seconds
+            setInterval(autoSaveDraft, 30000);
+        }
+
+        function setupValidation() {
+            const fields = ['patientName', 'patientId', 'patientAge', 'patientGender', 'insuranceNumber', 'patientContact'];
+            
+            fields.forEach(fieldId => {
+                const field = document.getElementById(fieldId);
+                field.addEventListener('blur', () => validateField(fieldId));
+                field.addEventListener('input', () => {
+                    if (fieldId === 'patientAge' || fieldId === 'patientGender') {
+                        checkRestrictions();
+                    }
+                });
+            });
+        }
+
+        function validateField(fieldId) {
+            const field = document.getElementById(fieldId);
+            const errorEl = document.getElementById(fieldId + 'Error');
+            let error = '';
+            
+            if (field.hasAttribute('required') && !field.value.trim()) {
+                error = 'This field is required';
+            } else if (fieldId === 'patientAge') {
+                const age = parseInt(field.value);
+                if (isNaN(age) || age < 0 || age > 150) {
+                    error = 'Please enter a valid age (0-150)';
+                }
+            } else if (fieldId === 'patientContact' && field.value) {
+                if (!/^[\d\s\+\-\(\)]+$/.test(field.value)) {
+                    error = 'Please enter a valid phone number';
+                }
+            }
+            
+            if (error) {
+                field.classList.add('border-red-500');
+                field.classList.remove('border-gray-300');
+                errorEl.textContent = error;
+                errorEl.classList.remove('hidden');
+                return false;
+            } else {
+                field.classList.remove('border-red-500');
+                field.classList.add('border-gray-300');
+                errorEl.classList.add('hidden');
+                return true;
+            }
+        }
+
+        function checkRestrictions() {
+            const age = parseInt(document.getElementById('patientAge').value);
+            const gender = document.getElementById('patientGender').value;
+            const warningDiv = document.getElementById('restrictionWarning');
+            const messageEl = document.getElementById('restrictionMessage');
+            
+            if (!currentTest || !age || !gender) {
+                warningDiv.classList.add('hidden');
+                return;
+            }
+            
+            let warnings = [];
+            
+            // Age restriction
+            if (currentTest.ageRestriction) {
+                const { type, min, max } = currentTest.ageRestriction;
+                if (type === 'min' && age < min) {
+                    warnings.push(`This test requires minimum age of ${min} years`);
+                } else if (type === 'max' && age > max) {
+                    warnings.push(`This test requires maximum age of ${max} years`);
+                } else if (type === 'range' && (age < min || age > max)) {
+                    warnings.push(`This test requires age between ${min} and ${max} years`);
+                }
+            }
+            
+            // Gender restriction
+            if (currentTest.genderRestriction && currentTest.genderRestriction !== 'both' && gender !== currentTest.genderRestriction) {
+                warnings.push(`This test is only available for ${currentTest.genderRestriction} patients`);
+            }
+            
+            if (warnings.length > 0) {
+                messageEl.textContent = warnings.join('. ');
+                warningDiv.classList.remove('hidden');
+            } else {
+                warningDiv.classList.add('hidden');
+            }
+        }
+
+        function autoSaveDraft() {
+            const formData = getFormData();
+            Object.assign(draft, formData);
+            saveDraft(draft);
+        }
+
+        function getFormData() {
+            return {
+                patientName: document.getElementById('patientName').value,
+                patientId: document.getElementById('patientId').value,
+                patientAge: parseInt(document.getElementById('patientAge').value) || null,
+                patientGender: document.getElementById('patientGender').value,
+                insuranceNumber: document.getElementById('insuranceNumber').value,
+                patientContact: document.getElementById('patientContact').value
+            };
+        }
+
+        document.getElementById('patientInfoForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate all fields
+            const fields = ['patientName', 'patientId', 'patientAge', 'patientGender', 'insuranceNumber'];
+            let isValid = true;
+            
+            fields.forEach(fieldId => {
+                if (!validateField(fieldId)) {
+                    isValid = false;
+                }
+            });
+            
+            if (!isValid) {
+                showToast('Please fix the errors before continuing', 'error');
+                return;
+            }
+            
+            // Save to draft
+            const formData = getFormData();
+            Object.assign(draft, formData);
+            saveDraft(draft);
+            
+            // Navigate to next step
+            window.location.href = 'create-step3.html';
+        });
+
+        function goBack() {
+            autoSaveDraft();
+            window.location.href = 'create-step1.html';
+        }
+
+        function saveDraftAndExit() {
+            autoSaveDraft();
+            showToast('Draft saved successfully', 'success');
+            setTimeout(() => window.location.href = 'my-requests.html', 1500);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        initStep2();
+    </script>
+    </div>
+</body>
+</html>

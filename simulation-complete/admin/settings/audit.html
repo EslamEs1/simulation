@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audit Log - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Audit Log Viewer</h1>
+                        <p class="mt-2 text-gray-600">View system audit trail and security events</p>
+                    </div>
+                    <button onclick="exportAuditLog()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Export Log</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-5 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Event Type</label>
+                            <select id="eventFilter" onchange="filterLogs()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Events</option>
+                                <option value="login">Login</option>
+                                <option value="logout">Logout</option>
+                                <option value="create">Create</option>
+                                <option value="update">Update</option>
+                                <option value="delete">Delete</option>
+                                <option value="security">Security</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">User</label>
+                            <select id="userFilter" onchange="filterLogs()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Users</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+                            <input type="date" id="dateFrom" onchange="filterLogs()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+                            <input type="date" id="dateTo" onchange="filterLogs()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="clearFilters()" class="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Clear</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Log Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Timestamp</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Event Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">User</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Action</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Resource</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">IP Address</th>
+                            </tr>
+                        </thead>
+                        <tbody id="auditTable" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-4 flex justify-between items-center">
+                    <p class="text-sm text-gray-700">Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> events</p>
+                    <div class="flex gap-2">
+                        <button onclick="previousPage()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Previous</button>
+                        <button onclick="nextPage()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        let allEvents = [];
+        let filteredEvents = [];
+        let currentPage = 1;
+        const perPage = 20;
+
+        function initAuditLog() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            allEvents = generateMockAuditEvents();
+            populateUserFilter();
+            
+            const today = new Date();
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            document.getElementById('dateFrom').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            
+            filterLogs();
+        }
+
+        function generateMockAuditEvents() {
+            const events = [];
+            const types = ['login', 'logout', 'create', 'update', 'delete', 'security'];
+            const actions = ['Login successful', 'Logout', 'Created request', 'Updated test', 'Deleted user', 'Failed login attempt'];
+            
+            for (let i = 0; i < 200; i++) {
+                const date = new Date();
+                date.setHours(date.getHours() - Math.floor(Math.random() * 168));
+                
+                events.push({
+                    timestamp: date.toISOString(),
+                    type: types[Math.floor(Math.random() * types.length)],
+                    user: mockUsers[Math.floor(Math.random() * mockUsers.length)].nameEN,
+                    action: actions[Math.floor(Math.random() * actions.length)],
+                    resource: 'REQ-' + (1000 + i),
+                    ipAddress: `192.168.1.${Math.floor(Math.random() * 255)}`
+                });
+            }
+            
+            return events.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+        }
+
+        function populateUserFilter() {
+            const userFilter = document.getElementById('userFilter');
+            const users = [...new Set(allEvents.map(e => e.user))];
+            users.forEach(user => {
+                const option = document.createElement('option');
+                option.value = user;
+                option.textContent = user;
+                userFilter.appendChild(option);
+            });
+        }
+
+        function filterLogs() {
+            const eventType = document.getElementById('eventFilter').value;
+            const user = document.getElementById('userFilter').value;
+            const dateFrom = new Date(document.getElementById('dateFrom').value || '2020-01-01');
+            const dateTo = new Date(document.getElementById('dateTo').value || '2030-12-31');
+            
+            filteredEvents = allEvents.filter(event => {
+                const eventDate = new Date(event.timestamp);
+                if (eventType && event.type !== eventType) return false;
+                if (user && event.user !== user) return false;
+                if (eventDate < dateFrom || eventDate > dateTo) return false;
+                return true;
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageEvents = filteredEvents.slice(start, end);
+            
+            const tbody = document.getElementById('auditTable');
+            tbody.innerHTML = pageEvents.map(event => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm text-gray-900">${formatDateTime(event.timestamp)}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${getEventColor(event.type)}">
+                            ${event.type}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${event.user}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${event.action}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${event.resource}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500 font-mono">${event.ipAddress}</td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('showingCount').textContent = pageEvents.length;
+            document.getElementById('totalCount').textContent = filteredEvents.length;
+        }
+
+        function getEventColor(type) {
+            const colors = {
+                login: 'bg-blue-100 text-blue-800',
+                logout: 'bg-gray-100 text-gray-800',
+                create: 'bg-green-100 text-green-800',
+                update: 'bg-yellow-100 text-yellow-800',
+                delete: 'bg-red-100 text-red-800',
+                security: 'bg-purple-100 text-purple-800'
+            };
+            return colors[type] || 'bg-gray-100 text-gray-800';
+        }
+
+        function clearFilters() {
+            document.getElementById('eventFilter').value = '';
+            document.getElementById('userFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            filterLogs();
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage * perPage < filteredEvents.length) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function exportAuditLog() {
+            alert('Audit log exported successfully!');
+        }
+
+        initAuditLog();
+    </script>
+</body>
+</html>

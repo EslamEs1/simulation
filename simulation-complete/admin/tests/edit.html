@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Test - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Edit Test</h1>
+                    <p class="mt-2 text-gray-600">Update test information and requirements</p>
+                </div>
+
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-6">
+                    <p class="text-sm text-yellow-700">
+                        <strong>Note:</strong> Changes will be tracked in modification history
+                    </p>
+                </div>
+
+                <form id="editTestForm" class="space-y-6">
+                    <!-- Section 1: Basic Information -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">1. Basic Information</h2>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Test Name (English) *</label>
+                                    <input type="text" id="testNameEN" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Test Name (Arabic) *</label>
+                                    <input type="text" id="testNameAR" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Test Code *</label>
+                                    <input type="text" id="testCode" required readonly class="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100">
+                                    <p class="text-xs text-gray-500 mt-1">Test code cannot be changed</p>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                                    <select id="category" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                        <option value="radiology">Radiology</option>
+                                        <option value="laboratory">Laboratory</option>
+                                        <option value="cardiology">Cardiology</option>
+                                        <option value="oncology">Oncology</option>
+                                        <option value="neurology">Neurology</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="requiresPreAuth" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">Requires Pre-Authorization</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Clinical Requirements -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">2. Clinical Requirements</h2>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Minimum Symptoms Required</label>
+                                    <input type="number" id="minSymptoms" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Min Justification Length (words)</label>
+                                    <input type="number" id="minJustification" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="documentsRequired" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                    <span class="ml-2 text-sm text-gray-700">Supporting Documents Required</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Status -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">3. Status</h2>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Test Status</label>
+                            <select id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Modification Notes -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Modification Notes</h2>
+                        <textarea id="modificationNotes" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Describe the changes made..."></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-between">
+                        <button type="button" onclick="goBack()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Cancel</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/validation.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const testId = urlParams.get('id');
+        let currentTest = null;
+
+        function initEditTest() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            if (!testId) {
+                showToast('Test ID not provided', 'error');
+                setTimeout(() => window.location.href = 'list.html', 2000);
+                return;
+            }
+            
+            currentTest = getTestById(testId);
+            if (!currentTest) {
+                showToast('Test not found', 'error');
+                setTimeout(() => window.location.href = 'list.html', 2000);
+                return;
+            }
+            
+            loadTestData();
+        }
+
+        function loadTestData() {
+            document.getElementById('testNameEN').value = currentTest.nameEN;
+            document.getElementById('testNameAR').value = currentTest.nameAR;
+            document.getElementById('testCode').value = currentTest.code;
+            document.getElementById('category').value = currentTest.category;
+            document.getElementById('requiresPreAuth').checked = currentTest.requiresPreAuth;
+            document.getElementById('minSymptoms').value = currentTest.minSymptoms || 0;
+            document.getElementById('minJustification').value = currentTest.minJustificationLength || 0;
+            document.getElementById('documentsRequired').checked = currentTest.documentsRequired;
+            document.getElementById('status').value = currentTest.status || 'active';
+        }
+
+        document.getElementById('editTestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const user = getCurrentUser();
+            const notes = document.getElementById('modificationNotes').value;
+            
+            currentTest.nameEN = document.getElementById('testNameEN').value;
+            currentTest.nameAR = document.getElementById('testNameAR').value;
+            currentTest.category = document.getElementById('category').value;
+            currentTest.requiresPreAuth = document.getElementById('requiresPreAuth').checked;
+            currentTest.minSymptoms = parseInt(document.getElementById('minSymptoms').value) || 0;
+            currentTest.minJustificationLength = parseInt(document.getElementById('minJustification').value) || 0;
+            currentTest.documentsRequired = document.getElementById('documentsRequired').checked;
+            currentTest.status = document.getElementById('status').value;
+            currentTest.lastModified = new Date().toISOString();
+            currentTest.modifiedBy = user?.nameEN;
+            
+            if (!currentTest.modificationHistory) currentTest.modificationHistory = [];
+            currentTest.modificationHistory.push({
+                date: new Date().toISOString(),
+                user: user?.nameEN,
+                notes: notes
+            });
+            
+            showToast('Test updated successfully!', 'success');
+            setTimeout(() => window.location.href = 'list.html', 1500);
+        });
+
+        function goBack() {
+            window.location.href = 'list.html';
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initEditTest();
+    </script>
+</body>
+</html>

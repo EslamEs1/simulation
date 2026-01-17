@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests Report - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Requests Report</h1>
+                        <p class="mt-2 text-gray-600">Analyze pre-authorization request data</p>
+                    </div>
+                    <button onclick="exportReport()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Export Report
+                    </button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-4">Report Filters</h2>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date From</label>
+                            <input type="date" id="dateFrom" onchange="generateReport()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date To</label>
+                            <input type="date" id="dateTo" onchange="generateReport()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="statusFilter" onchange="generateReport()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Statuses</option>
+                                <option value="approved">Approved</option>
+                                <option value="rejected">Rejected</option>
+                                <option value="submitted">Submitted</option>
+                                <option value="under_review">Under Review</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Test Category</label>
+                            <select id="categoryFilter" onchange="generateReport()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Categories</option>
+                                <option value="radiology">Radiology</option>
+                                <option value="laboratory">Laboratory</option>
+                                <option value="cardiology">Cardiology</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Stats -->
+                <div class="grid grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Total Requests</p>
+                        <p class="text-3xl font-bold text-gray-900" id="totalRequests">0</p>
+                        <p class="text-xs text-gray-500 mt-1">In selected period</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Approved</p>
+                        <p class="text-3xl font-bold text-green-600" id="approvedRequests">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="approvalRate">0% approval rate</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Rejected</p>
+                        <p class="text-3xl font-bold text-red-600" id="rejectedRequests">0</p>
+                        <p class="text-xs text-gray-500 mt-1" id="rejectionRate">0% rejection rate</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Avg Review Time</p>
+                        <p class="text-3xl font-bold text-blue-600" id="avgReviewTime">0</p>
+                        <p class="text-xs text-gray-500 mt-1">Hours</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Requests by Status</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Requests by Category</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Trend Chart -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Request Trend Over Time</h3>
+                    <canvas id="trendChart"></canvas>
+                </div>
+
+                <!-- Top Tests -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Requested Tests</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Test Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Requests</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Approved</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rejected</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Approval Rate</th>
+                                </tr>
+                            </thead>
+                            <tbody id="topTestsTable" class="bg-white divide-y divide-gray-200"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script>
+        let filteredRequests = [];
+        let charts = {};
+
+        function initReport() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            const today = new Date();
+            const monthAgo = new Date();
+            monthAgo.setMonth(monthAgo.getMonth() - 1);
+            
+            document.getElementById('dateFrom').value = monthAgo.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+            
+            generateReport();
+        }
+
+        function generateReport() {
+            const dateFrom = new Date(document.getElementById('dateFrom').value || '2020-01-01');
+            const dateTo = new Date(document.getElementById('dateTo').value || '2030-12-31');
+            const status = document.getElementById('statusFilter').value;
+            const category = document.getElementById('categoryFilter').value;
+            
+            filteredRequests = mockRequests.filter(r => {
+                const reqDate = new Date(r.submittedDate);
+                if (reqDate < dateFrom || reqDate > dateTo) return false;
+                if (status && r.status !== status) return false;
+                if (category && r.category !== category) return false;
+                return true;
+            });
+            
+            updateStats();
+            updateCharts();
+            updateTopTests();
+        }
+
+        function updateStats() {
+            const total = filteredRequests.length;
+            const approved = filteredRequests.filter(r => r.status === 'approved').length;
+            const rejected = filteredRequests.filter(r => r.status === 'rejected').length;
+            
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('approvedRequests').textContent = approved;
+            document.getElementById('rejectedRequests').textContent = rejected;
+            
+            const approvalRate = total > 0 ? ((approved / total) * 100).toFixed(1) : 0;
+            const rejectionRate = total > 0 ? ((rejected / total) * 100).toFixed(1) : 0;
+            
+            document.getElementById('approvalRate').textContent = `${approvalRate}% approval rate`;
+            document.getElementById('rejectionRate').textContent = `${rejectionRate}% rejection rate`;
+            document.getElementById('avgReviewTime').textContent = '24';
+        }
+
+        function updateCharts() {
+            const statusCounts = {
+                approved: filteredRequests.filter(r => r.status === 'approved').length,
+                rejected: filteredRequests.filter(r => r.status === 'rejected').length,
+                submitted: filteredRequests.filter(r => r.status === 'submitted').length,
+                under_review: filteredRequests.filter(r => r.status === 'under_review').length
+            };
+            
+            if (charts.status) charts.status.destroy();
+            charts.status = new Chart(document.getElementById('statusChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Approved', 'Rejected', 'Submitted', 'Under Review'],
+                    datasets: [{
+                        data: [statusCounts.approved, statusCounts.rejected, statusCounts.submitted, statusCounts.under_review],
+                        backgroundColor: ['#10b981', '#ef4444', '#3b82f6', '#f59e0b']
+                    }]
+                }
+            });
+            
+            const categoryCounts = {};
+            filteredRequests.forEach(r => {
+                categoryCounts[r.category] = (categoryCounts[r.category] || 0) + 1;
+            });
+            
+            if (charts.category) charts.category.destroy();
+            charts.category = new Chart(document.getElementById('categoryChart'), {
+                type: 'pie',
+                data: {
+                    labels: Object.keys(categoryCounts),
+                    datasets: [{
+                        data: Object.values(categoryCounts),
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                    }]
+                }
+            });
+            
+            if (charts.trend) charts.trend.destroy();
+            charts.trend = new Chart(document.getElementById('trendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                    datasets: [{
+                        label: 'Requests',
+                        data: [12, 19, 15, 22],
+                        borderColor: '#3b82f6',
+                        tension: 0.1
+                    }]
+                }
+            });
+        }
+
+        function updateTopTests() {
+            const testCounts = {};
+            filteredRequests.forEach(r => {
+                if (!testCounts[r.testName]) {
+                    testCounts[r.testName] = {total: 0, approved: 0, rejected: 0};
+                }
+                testCounts[r.testName].total++;
+                if (r.status === 'approved') testCounts[r.testName].approved++;
+                if (r.status === 'rejected') testCounts[r.testName].rejected++;
+            });
+            
+            const sorted = Object.entries(testCounts)
+                .sort((a, b) => b[1].total - a[1].total)
+                .slice(0, 10);
+            
+            const tbody = document.getElementById('topTestsTable');
+            tbody.innerHTML = sorted.map(([name, data]) => {
+                const rate = ((data.approved / data.total) * 100).toFixed(1);
+                return `
+                    <tr>
+                        <td class="px-6 py-4 text-sm font-medium text-gray-900">${name}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">${data.total}</td>
+                        <td class="px-6 py-4 text-sm text-green-600">${data.approved}</td>
+                        <td class="px-6 py-4 text-sm text-red-600">${data.rejected}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">${rate}%</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportReport() {
+            showToast('Report exported successfully!', 'success');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initReport();
+    </script>
+</body>
+</html>

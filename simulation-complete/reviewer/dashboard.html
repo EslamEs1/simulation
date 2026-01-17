@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reviewer Dashboard - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="ReviewerDashboard">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-b-2 border-blue-500 text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="review-queue.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Review Queue</a>
+                        <a href="my-reviews.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">My Reviews</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Reviewer</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Reviewer Dashboard</h1>
+            <p class="mt-2 text-gray-600">Review and manage pre-authorization requests</p>
+        </div>
+
+        <!-- Statistics Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Pending Reviews -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-yellow-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Pending Reviews</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="pendingCount">0</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <a href="review-queue.html" class="text-sm text-blue-600 hover:text-blue-800">View queue →</a>
+                </div>
+            </div>
+
+            <!-- Approved Today -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-green-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Approved Today</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="approvedToday">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rejected Today -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-red-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Rejected Today</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="rejectedToday">0</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Approval Rate -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Approval Rate</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="approvalRate">0%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pending Requests Table -->
+        <div class="bg-white rounded-lg shadow mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                <h2 class="text-lg font-semibold text-gray-900">Pending Requests</h2>
+                <a href="review-queue.html" class="text-sm text-blue-600 hover:text-blue-800">View all →</a>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Request ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Test</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pendingRequestsTable" class="bg-white divide-y divide-gray-200">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- My Performance -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">My Performance</h3>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Total Reviews</span>
+                            <span class="font-semibold" id="totalReviews">0</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Average Review Time</span>
+                            <span class="font-semibold" id="avgReviewTime">0 min</span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">This Month</span>
+                            <span class="font-semibold" id="monthlyReviews">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+                <div class="space-y-3">
+                    <button onclick="window.location.href='review-queue.html'" class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <span class="text-sm font-medium text-gray-700">Start Reviewing</span>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                    <button onclick="window.location.href='my-reviews.html'" class="w-full flex items-center justify-between p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <span class="text-sm font-medium text-gray-700">My Review History</span>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        function initReviewerDashboard() {
+            requirePermission('view_requests');
+            
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+                updateStatistics(user);
+                loadPendingRequests();
+            }
+        }
+
+        function updateStatistics(user) {
+            const pending = mockRequests.filter(r => r.status === 'submitted' || r.status === 'under_review').length;
+            const today = new Date().toISOString().split('T')[0];
+            const approvedToday = mockRequests.filter(r => r.status === 'approved' && r.approvalDate === today).length;
+            const rejectedToday = mockRequests.filter(r => r.status === 'rejected' && r.rejectionDate === today).length;
+            
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedToday').textContent = approvedToday;
+            document.getElementById('rejectedToday').textContent = rejectedToday;
+            
+            if (user.stats) {
+                document.getElementById('approvalRate').textContent = user.stats.approvalRate + '%';
+                document.getElementById('totalReviews').textContent = user.stats.totalReviews;
+                document.getElementById('avgReviewTime').textContent = user.stats.avgReviewTime + ' min';
+                document.getElementById('monthlyReviews').textContent = Math.floor(user.stats.totalReviews / 3);
+            }
+        }
+
+        function loadPendingRequests() {
+            const pending = mockRequests.filter(r => r.status === 'submitted' || r.status === 'under_review').slice(0, 5);
+            const tbody = document.getElementById('pendingRequestsTable');
+            
+            if (pending.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="px-6 py-8 text-center text-gray-500">
+                            <p>No pending requests</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = pending.map(req => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="font-mono text-sm font-semibold text-gray-900">${req.id}</span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${req.patientName}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${req.testName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${formatDate(req.submittedDate)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(daysSince(req.submittedDate))}">
+                            ${getPriorityLabel(daysSince(req.submittedDate))}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="reviewRequest('${req.id}')" class="text-blue-600 hover:text-blue-900">Review</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getPriorityColor(days) {
+            if (days >= 3) return 'bg-red-100 text-red-800';
+            if (days >= 2) return 'bg-yellow-100 text-yellow-800';
+            return 'bg-green-100 text-green-800';
+        }
+
+        function getPriorityLabel(days) {
+            if (days >= 3) return 'Urgent';
+            if (days >= 2) return 'High';
+            return 'Normal';
+        }
+
+        function reviewRequest(requestId) {
+            window.location.href = `review-request.html?id=${requestId}`;
+        }
+
+        function daysSince(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        initReviewerDashboard();
+    </script>
+    </div>
+</body>
+</html>

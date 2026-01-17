@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Reviews - Insurance Reviewer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+  
+  <!-- Navigation -->
+  <nav class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex">
+          <div class="flex-shrink-0 flex items-center">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+            <span class="ml-2 text-lg font-semibold text-gray-900">Pre-Auth System</span>
+          </div>
+          <div class="hidden sm:ml-8 sm:flex sm:space-x-8">
+            <a href="dashboard.html" class="border-b-2 border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              Review Queue
+            </a>
+            <a href="request-history.html" class="border-b-2 border-blue-500 text-gray-900 inline-flex items-center px-1 pt-1 text-sm font-medium">
+              My Reviews
+            </a>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <div id="user-info" class="flex items-center"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <h1 class="text-2xl font-bold text-gray-900">My Review History</h1>
+      <p class="mt-1 text-sm text-gray-500">All requests you have reviewed</p>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    
+    <!-- Performance Stats -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-8">
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Reviews</dt>
+                <dd class="text-2xl font-semibold text-gray-900">156</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Approval Rate</dt>
+                <dd class="text-2xl font-semibold text-gray-900">78%</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white overflow-hidden shadow rounded-lg">
+        <div class="p-5">
+          <div class="flex items-center">
+            <div class="flex-shrink-0">
+              <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
+                <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+              </div>
+            </div>
+            <div class="ml-5 w-0 flex-1">
+              <dl>
+                <dt class="text-sm font-medium text-gray-500 truncate">Avg Time</dt>
+                <dd class="text-2xl font-semibold text-gray-900">2.1 days</dd>
+              </dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white shadow rounded-lg mb-6 p-4">
+      <div class="flex flex-wrap gap-2">
+        <button class="px-4 py-2 text-sm font-medium rounded-md bg-blue-100 text-blue-700 hover:bg-blue-200 transition-colors">
+          All Reviews
+        </button>
+        <button class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+          Approved
+        </button>
+        <button class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+          Rejected
+        </button>
+        <button class="px-4 py-2 text-sm font-medium rounded-md bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors">
+          More Info Requested
+        </button>
+      </div>
+    </div>
+
+    <!-- Review History Table -->
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+        <h3 class="text-lg leading-6 font-medium text-gray-900">
+          Review History
+        </h3>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Request ID
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Patient
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Test
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Review Date
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Decision
+              </th>
+              <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">REQ-2026-004</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Maryam Youssef</td>
+              <td class="px-6 py-4 text-sm text-gray-900">Thyroid Hormone, T3</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 13, 2026</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                  Approved
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="review-request.html?id=REQ-2026-004" class="text-blue-600 hover:text-blue-900">View</a>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">REQ-2026-003</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Omar Mahmoud</td>
+              <td class="px-6 py-4 text-sm text-gray-900">Testosterone (Total)</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 14, 2026</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                  More Info Requested
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="review-request.html?id=REQ-2026-003" class="text-blue-600 hover:text-blue-900">View</a>
+              </td>
+            </tr>
+            <tr class="hover:bg-gray-50">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">REQ-2026-002</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Fatima Ali</td>
+              <td class="px-6 py-4 text-sm text-gray-900">Free T4</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Jan 15, 2026</td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                  Under Review
+                </span>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <a href="review-request.html?id=REQ-2026-002" class="text-blue-600 hover:text-blue-900">View</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Scripts -->
+  <script src="../assets/js/mock-data.js"></script>
+  <script src="../assets/js/main.js"></script>
+
+</body>
+</html>

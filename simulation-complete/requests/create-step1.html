@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request - Select Test - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="CreateRequestStep1">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Progress Steps -->
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-600 text-white font-semibold">1</div>
+                        <span class="ml-2 text-sm font-medium text-blue-600">Select Test</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">2</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Patient Info</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">3</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Symptoms</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">4</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">ICD-10</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">5</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Justification</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center flex-1">
+                    <div class="flex items-center">
+                        <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">6</div>
+                        <span class="ml-2 text-sm font-medium text-gray-500">Documents</span>
+                    </div>
+                    <div class="flex-1 h-1 bg-gray-200 mx-4"></div>
+                </div>
+                <div class="flex items-center">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-gray-200 text-gray-500 font-semibold">7</div>
+                    <span class="ml-2 text-sm font-medium text-gray-500">Review</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Create New Request - Step 1: Select Test</h1>
+            <p class="mt-2 text-gray-600">Search and select the medical test you need pre-authorization for</p>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="bg-white rounded-lg shadow mb-6 p-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div class="md:col-span-2">
+                    <label for="searchTests" class="block text-sm font-medium text-gray-700 mb-2">Search Tests</label>
+                    <div class="relative">
+                        <input type="text" id="searchTests" placeholder="Search by test name or code..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="filterCategory" class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                    <select id="filterCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Categories</option>
+                        <option value="hormones">Hormones</option>
+                        <option value="antibodies">Antibodies</option>
+                        <option value="blood">Blood Tests</option>
+                        <option value="urine">Urine Tests</option>
+                        <option value="vitamins">Vitamins</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+                <label class="flex items-center">
+                    <input type="checkbox" id="filterPreAuthOnly" checked class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                    <span class="ml-2 text-sm text-gray-700">Show only tests requiring pre-authorization</span>
+                </label>
+            </div>
+        </div>
+
+        <!-- Tests Grid -->
+        <div id="testsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden bg-white rounded-lg shadow p-12 text-center">
+            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <p class="text-lg font-medium text-gray-900">No tests found</p>
+            <p class="mt-1 text-gray-500">Try adjusting your search or filters</p>
+        </div>
+    </div>
+
+    <!-- Test Details Modal -->
+    <div id="testDetailsModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-lg bg-white">
+            <div class="flex justify-between items-start mb-4">
+                <h3 class="text-lg font-semibold text-gray-900" id="modalTestName"></h3>
+                <button onclick="closeModal()" class="text-gray-400 hover:text-gray-600">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="modalTestDetails" class="space-y-4">
+                <!-- Populated by JavaScript -->
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal()" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Close
+                </button>
+                <button onclick="selectTestFromModal()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Select This Test
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let filteredTests = [];
+        let selectedTestId = null;
+
+        function initSelectTest() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Load any existing draft
+            const draft = loadDraft();
+            if (draft && draft.testId) {
+                selectedTestId = draft.testId;
+            }
+            
+            applyFilters();
+            
+            // Set up real-time search
+            document.getElementById('searchTests').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('filterCategory').addEventListener('change', applyFilters);
+            document.getElementById('filterPreAuthOnly').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchTests').value.toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const preAuthOnly = document.getElementById('filterPreAuthOnly').checked;
+            
+            filteredTests = mockTests.filter(test => {
+                // Only active tests
+                if (test.status !== 'active') return false;
+                
+                // Pre-auth filter
+                if (preAuthOnly && !test.preAuthRequired) return false;
+                
+                // Search filter
+                const matchesSearch = !searchTerm || 
+                    test.nameEN.toLowerCase().includes(searchTerm) ||
+                    test.nameAR.includes(searchTerm) ||
+                    test.code.toLowerCase().includes(searchTerm);
+                
+                // Category filter
+                const matchesCategory = !category || test.category === category;
+                
+                return matchesSearch && matchesCategory;
+            });
+            
+            renderTests();
+        }
+
+        function renderTests() {
+            const grid = document.getElementById('testsGrid');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filteredTests.length === 0) {
+                grid.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            grid.classList.remove('hidden');
+            emptyState.classList.add('hidden');
+            
+            grid.innerHTML = filteredTests.map(test => `
+                <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow p-6 ${selectedTestId === test.id ? 'ring-2 ring-blue-500' : ''}">
+                    <div class="flex justify-between items-start mb-3">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-semibold text-gray-900">${test.nameEN}</h3>
+                            <p class="text-sm text-gray-600" dir="rtl">${test.nameAR}</p>
+                        </div>
+                        <span class="px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(test.category)}">
+                            ${test.category}
+                        </span>
+                    </div>
+                    
+                    <div class="space-y-2 mb-4">
+                        <div class="flex items-center text-sm text-gray-600">
+                            <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"/>
+                            </svg>
+                            <span class="font-mono">${test.code}</span>
+                        </div>
+                        ${test.preAuthRequired ? `
+                            <div class="flex items-center text-sm text-green-600">
+                                <svg class="h-4 w-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Pre-authorization required</span>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="flex gap-2">
+                        <button onclick="viewTestDetails('${test.id}')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm">
+                            View Details
+                        </button>
+                        <button onclick="selectTest('${test.id}')" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
+                            ${selectedTestId === test.id ? 'Selected ✓' : 'Select'}
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewTestDetails(testId) {
+            const test = getTestById(testId);
+            if (!test) return;
+            
+            document.getElementById('modalTestName').textContent = test.nameEN;
+            document.getElementById('modalTestDetails').innerHTML = `
+                <div class="space-y-4">
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Test Information</h4>
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <div>
+                                <span class="text-gray-500">Code:</span>
+                                <span class="font-mono ml-2">${test.code}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Category:</span>
+                                <span class="ml-2">${test.category}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Arabic Name:</span>
+                                <span class="ml-2" dir="rtl">${test.nameAR}</span>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">Pre-Auth:</span>
+                                <span class="ml-2">${test.preAuthRequired ? 'Required' : 'Not Required'}</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-semibold text-gray-900 mb-2">Clinical Requirements</h4>
+                        <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
+                            <li>Minimum ${test.minSymptoms} clinical symptoms required</li>
+                            <li>Clinical justification: minimum ${test.minJustificationLength} words</li>
+                            ${test.ageRestriction?.type !== 'none' ? `<li>Age restriction: ${getAgeRestrictionText(test.ageRestriction)}</li>` : ''}
+                            ${test.genderRestriction !== 'both' ? `<li>Gender restriction: ${test.genderRestriction} only</li>` : ''}
+                            ${test.documentsRequired ? `<li>Supporting documents required (minimum ${test.minDocuments})</li>` : ''}
+                        </ul>
+                    </div>
+                    
+                    ${test.requiredSymptoms && test.requiredSymptoms.length > 0 ? `
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Required Symptoms</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${test.requiredSymptoms.map(s => `<span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${test.icd10CodesApproved && test.icd10CodesApproved.length > 0 ? `
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Approved ICD-10 Codes</h4>
+                            <div class="flex flex-wrap gap-2">
+                                ${test.icd10CodesApproved.slice(0, 5).map(c => `<span class="px-2 py-1 bg-green-100 text-green-800 text-xs font-mono rounded">${c}</span>`).join('')}
+                                ${test.icd10CodesApproved.length > 5 ? `<span class="text-xs text-gray-500">+${test.icd10CodesApproved.length - 5} more</span>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    ${test.insuranceNotes ? `
+                        <div>
+                            <h4 class="font-semibold text-gray-900 mb-2">Insurance Notes</h4>
+                            <p class="text-sm text-gray-700 bg-yellow-50 p-3 rounded">${test.insuranceNotes}</p>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            selectedTestId = testId;
+            document.getElementById('testDetailsModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('testDetailsModal').classList.add('hidden');
+        }
+
+        function selectTestFromModal() {
+            if (selectedTestId) {
+                selectTest(selectedTestId);
+                closeModal();
+            }
+        }
+
+        function selectTest(testId) {
+            selectedTestId = testId;
+            const test = getTestById(testId);
+            
+            // Save to draft
+            const draft = loadDraft() || {};
+            draft.testId = testId;
+            draft.testName = test.nameEN;
+            draft.testCode = test.code;
+            saveDraft(draft);
+            
+            showToast(`Selected: ${test.nameEN}`, 'success');
+            
+            // Navigate to next step
+            setTimeout(() => {
+                window.location.href = 'create-step2.html';
+            }, 1000);
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                hormones: 'bg-purple-100 text-purple-800',
+                antibodies: 'bg-blue-100 text-blue-800',
+                blood: 'bg-red-100 text-red-800',
+                urine: 'bg-yellow-100 text-yellow-800',
+                vitamins: 'bg-green-100 text-green-800',
+                other: 'bg-gray-100 text-gray-800'
+            };
+            return colors[category] || colors.other;
+        }
+
+        function getAgeRestrictionText(restriction) {
+            if (restriction.type === 'min') return `Minimum ${restriction.min} years`;
+            if (restriction.type === 'max') return `Maximum ${restriction.max} years`;
+            if (restriction.type === 'range') return `${restriction.min}-${restriction.max} years`;
+            return 'No restriction';
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        initSelectTest();
+    </script>
+</body>
+</html>

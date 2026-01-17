@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Settings - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Notification Settings</h1>
+                    <p class="mt-2 text-gray-600">Configure system notifications and alerts</p>
+                </div>
+
+                <form id="notificationForm" class="space-y-6">
+                    <!-- Email Notifications -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Email Notifications</h2>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">New request submitted</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">Request approved</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">Request rejected</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">More information needed</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">Request assigned to reviewer</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- In-App Notifications -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">In-App Notifications</h2>
+                        <div class="space-y-3">
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">Show desktop notifications</span>
+                                <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                            </label>
+                            <label class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-lg">
+                                <span class="text-sm text-gray-700">Play sound for new notifications</span>
+                                <input type="checkbox" class="rounded border-gray-300 text-blue-600">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Notification Frequency -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Notification Frequency</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Digest Frequency</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="realtime">Real-time</option>
+                                    <option value="hourly">Hourly digest</option>
+                                    <option value="daily">Daily digest</option>
+                                    <option value="weekly">Weekly digest</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end">
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Notification Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        function initNotificationSettings() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+        }
+
+        document.getElementById('notificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Notification settings saved successfully!', 'success');
+        });
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initNotificationSettings();
+    </script>
+</body>
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New User - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="AddUser">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="../dashboard.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="../tests/list.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Tests List</a>
+                        <a href="list.html" class="border-b-2 border-blue-500 text-gray-900 px-3 py-2 text-sm font-medium">Users</a>
+                        <a href="../settings/general.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Settings</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Admin User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="../dashboard.html" class="text-gray-500 hover:text-gray-700">Dashboard</a></li>
+                <li><span class="text-gray-400">/</span></li>
+                <li><a href="list.html" class="text-gray-500 hover:text-gray-700">User Management</a></li>
+                <li><span class="text-gray-400">/</span></li>
+                <li class="text-gray-900 font-medium">Add New User</li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Add New User</h1>
+            <p class="mt-2 text-gray-600">Create a new user account with role and permissions</p>
+        </div>
+
+        <!-- Form -->
+        <form id="addUserForm" class="space-y-8">
+            <!-- Personal Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Personal Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="nameEN" class="block text-sm font-medium text-gray-700 mb-2">
+                            Full Name (English) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="nameEN" name="nameEN" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., Dr. Ahmed Saleh">
+                    </div>
+
+                    <div>
+                        <label for="nameAR" class="block text-sm font-medium text-gray-700 mb-2">
+                            Full Name (Arabic) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="nameAR" name="nameAR" required dir="rtl"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="د. أحمد صالح">
+                    </div>
+
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address <span class="text-red-500">*</span>
+                        </label>
+                        <input type="email" id="email" name="email" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="ahmed.saleh@insurance.com">
+                        <p class="mt-1 text-sm text-gray-500">Must be unique</p>
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
+                            Phone Number
+                        </label>
+                        <input type="tel" id="phone" name="phone"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="+966501234567">
+                    </div>
+
+                    <div>
+                        <label for="facility" class="block text-sm font-medium text-gray-700 mb-2">
+                            Facility/Hospital <span class="text-red-500">*</span>
+                        </label>
+                        <select id="facility" name="facility" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select facility...</option>
+                            <option value="Main Office">Main Office</option>
+                            <option value="Branch Office">Branch Office</option>
+                            <option value="Regional Center">Regional Center</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="department" class="block text-sm font-medium text-gray-700 mb-2">
+                            Department <span class="text-red-500">*</span>
+                        </label>
+                        <select id="department" name="department" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select department...</option>
+                            <option value="Medical Review">Medical Review</option>
+                            <option value="IT Administration">IT Administration</option>
+                            <option value="Management">Management</option>
+                            <option value="Operations">Operations</option>
+                        </select>
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="employeeNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                            Employee Number
+                        </label>
+                        <input type="text" id="employeeNumber" name="employeeNumber"
+                            class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., EMP-2001">
+                        <p class="mt-1 text-sm text-gray-500">Optional, but must be unique if provided</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-6">Account Information</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            Username <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="username" name="username" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="ahmed.saleh">
+                        <p class="mt-1 text-sm text-gray-500">3-50 characters, letters, numbers, dots, dashes, underscores</p>
+                    </div>
+
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700 mb-2">
+                            Role <span class="text-red-500">*</span>
+                        </label>
+                        <select id="role" name="role" required onchange="updateRoleDescription()"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select role...</option>
+                            <option value="reviewer">Insurance Reviewer</option>
+                            <option value="admin">System Administrator</option>
+                            <option value="reports_viewer">Reports Viewer</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="••••••••">
+                            <button type="button" onclick="togglePassword('password')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">Min 8 characters with 1 lowercase, 1 uppercase, 1 digit</p>
+                        <div id="passwordStrength" class="mt-2 h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="passwordStrengthBar" class="h-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
+                            Confirm Password <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="confirmPassword" name="confirmPassword" required
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                placeholder="••••••••">
+                            <button type="button" onclick="togglePassword('confirmPassword')" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            Account Status <span class="text-red-500">*</span>
+                        </label>
+                        <select id="status" name="status" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Role Description -->
+                <div id="roleDescription" class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg hidden">
+                    <h3 class="font-semibold text-blue-900 mb-2">Role Permissions:</h3>
+                    <ul id="rolePermissionsList" class="list-disc pl-5 text-sm text-blue-800 space-y-1"></ul>
+                </div>
+            </div>
+
+            <!-- Additional Permissions (Optional) -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Additional Permissions (Optional)</h2>
+                <p class="text-sm text-gray-600 mb-6">Customize specific permissions for this user</p>
+                
+                <div class="space-y-3">
+                    <label class="flex items-center">
+                        <input type="checkbox" name="customPermissions" value="export_data" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <span class="ml-3 text-sm text-gray-700">Can export data</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="customPermissions" value="bulk_operations" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <span class="ml-3 text-sm text-gray-700">Can perform bulk operations</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="customPermissions" value="view_audit_log" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <span class="ml-3 text-sm text-gray-700">Can view audit log</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-between items-center pt-6 border-t">
+                <button type="button" onclick="window.location.href='list.html'" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Create User
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/validation.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script src="../../assets/js/edge-cases.js"></script>
+    <script>
+        // Initialize page
+        function initAddUser() {
+            // Check permissions
+            requirePermission('manage_users');
+            
+            // Display current user
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Set up form validation
+            setupFormValidation();
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('addUserForm');
+            
+            // Real-time validation for username
+            const usernameField = document.getElementById('username');
+            usernameField.addEventListener('blur', function() {
+                const value = this.value.toLowerCase();
+                this.value = value;
+                
+                if (value && !isUsernameUnique(value)) {
+                    showToast('Username already exists', 'error');
+                    this.classList.add('border-red-500');
+                } else if (value) {
+                    this.classList.remove('border-red-500');
+                    this.classList.add('border-green-500');
+                    setTimeout(() => this.classList.remove('border-green-500'), 2000);
+                }
+            });
+            
+            // Real-time validation for email
+            const emailField = document.getElementById('email');
+            emailField.addEventListener('blur', function() {
+                const value = this.value.toLowerCase();
+                this.value = value;
+                
+                if (value && !isEmailUnique(value)) {
+                    showToast('Email already exists', 'error');
+                    this.classList.add('border-red-500');
+                } else if (value) {
+                    this.classList.remove('border-red-500');
+                    this.classList.add('border-green-500');
+                    setTimeout(() => this.classList.remove('border-green-500'), 2000);
+                }
+            });
+            
+            // Password strength indicator
+            const passwordField = document.getElementById('password');
+            passwordField.addEventListener('input', function() {
+                updatePasswordStrength(this.value);
+            });
+            
+            // Confirm password validation
+            const confirmPasswordField = document.getElementById('confirmPassword');
+            confirmPasswordField.addEventListener('input', function() {
+                const password = document.getElementById('password').value;
+                if (this.value && this.value !== password) {
+                    this.classList.add('border-red-500');
+                } else if (this.value) {
+                    this.classList.remove('border-red-500');
+                    this.classList.add('border-green-500');
+                }
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveUser();
+            });
+        }
+
+        function updatePasswordStrength(password) {
+            const strengthBar = document.getElementById('passwordStrengthBar');
+            let strength = 0;
+            
+            if (password.length >= 8) strength += 25;
+            if (/[a-z]/.test(password)) strength += 25;
+            if (/[A-Z]/.test(password)) strength += 25;
+            if (/\d/.test(password)) strength += 25;
+            
+            strengthBar.style.width = strength + '%';
+            
+            if (strength < 50) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-red-500';
+            } else if (strength < 75) {
+                strengthBar.className = 'h-full transition-all duration-300 bg-yellow-500';
+            } else {
+                strengthBar.className = 'h-full transition-all duration-300 bg-green-500';
+            }
+        }
+
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            field.type = field.type === 'password' ? 'text' : 'password';
+        }
+
+        function updateRoleDescription() {
+            const role = document.getElementById('role').value;
+            const descriptionDiv = document.getElementById('roleDescription');
+            const permissionsList = document.getElementById('rolePermissionsList');
+            
+            const rolePermissions = {
+                reviewer: [
+                    'View all new requests in review queue',
+                    'Review complete request details',
+                    'Approve or reject requests',
+                    'Request additional information',
+                    'View patient history',
+                    'Add internal notes',
+                    'Export review reports'
+                ],
+                admin: [
+                    'Manage Tests List (add, edit, deactivate)',
+                    'Manage users (add, edit, reset passwords)',
+                    'Configure system settings',
+                    'View all reports and analytics',
+                    'Access audit logs',
+                    'Import/export data'
+                ],
+                reports_viewer: [
+                    'View all statistical reports',
+                    'Customize date ranges and filters',
+                    'Export reports (PDF, Excel, CSV)',
+                    'View dashboards',
+                    'Compare performance across periods'
+                ]
+            };
+            
+            if (role && rolePermissions[role]) {
+                permissionsList.innerHTML = rolePermissions[role].map(p => `<li>${p}</li>`).join('');
+                descriptionDiv.classList.remove('hidden');
+            } else {
+                descriptionDiv.classList.add('hidden');
+            }
+        }
+
+        function saveUser() {
+            // Collect form data
+            const formData = {
+                nameEN: document.getElementById('nameEN').value,
+                nameAR: document.getElementById('nameAR').value,
+                email: document.getElementById('email').value.toLowerCase(),
+                phone: document.getElementById('phone').value,
+                facility: document.getElementById('facility').value,
+                department: document.getElementById('department').value,
+                employeeNumber: document.getElementById('employeeNumber').value,
+                username: document.getElementById('username').value.toLowerCase(),
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value,
+                role: document.getElementById('role').value,
+                status: document.getElementById('status').value,
+                customPermissions: Array.from(document.querySelectorAll('input[name="customPermissions"]:checked'))
+                    .map(cb => cb.value)
+            };
+            
+            // Validate
+            if (!formData.username || !formData.email || !formData.password || !formData.role) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            if (!isUsernameUnique(formData.username)) {
+                showToast('Username already exists', 'error');
+                return;
+            }
+            
+            if (!isEmailUnique(formData.email)) {
+                showToast('Email already exists', 'error');
+                return;
+            }
+            
+            if (formData.employeeNumber && !isEmployeeNumberUnique(formData.employeeNumber)) {
+                showToast('Employee number already exists', 'error');
+                return;
+            }
+            
+            if (formData.password !== formData.confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            
+            // Validate password strength
+            const passwordValidation = validateField('password', formData.password, validationRules.userForm.password);
+            if (passwordValidation.length > 0) {
+                showToast(passwordValidation[0], 'error');
+                return;
+            }
+            
+            // Create new user
+            const newUser = {
+                id: `USER-${String(mockUsers.length + 1).padStart(3, '0')}`,
+                username: formData.username,
+                email: formData.email,
+                nameAR: formData.nameAR,
+                nameEN: formData.nameEN,
+                role: formData.role,
+                department: formData.department,
+                facility: formData.facility,
+                employeeNumber: formData.employeeNumber || null,
+                status: formData.status,
+                phone: formData.phone,
+                createdDate: new Date().toISOString().split('T')[0],
+                lastLogin: null,
+                customPermissions: formData.customPermissions
+            };
+            
+            // Add reviewer stats if role is reviewer
+            if (formData.role === 'reviewer') {
+                newUser.stats = {
+                    totalReviews: 0,
+                    approvalRate: 0,
+                    avgReviewTime: 0,
+                    pendingReviews: 0
+                };
+            }
+            
+            // Add to mock data
+            mockUsers.push(newUser);
+            
+            // Log activity
+            logActivity({
+                timestamp: new Date().toISOString(),
+                user: getCurrentUser()?.nameEN,
+                action: 'Created user',
+                details: `User: ${newUser.nameEN} (${newUser.username})`,
+                type: 'user_management'
+            });
+            
+            // Show success and redirect
+            showToast('User created successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'list.html';
+            }, 1500);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Initialize on page load
+        initAddUser();
+    </script>
+    </div>
+</body>
+</html>

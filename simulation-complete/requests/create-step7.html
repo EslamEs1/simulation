@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request - Review & Submit - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="CreateRequestStep7">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Test</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Patient</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Symptoms</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">ICD-10</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Justification</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Documents</span></div><div class="flex-1 h-1 bg-blue-600 mx-2"></div></div>
+                <div class="flex items-center"><div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">7</div><span class="ml-2 text-blue-600 font-medium">Review</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Step 7: Review & Submit</h1>
+            <p class="mt-2 text-gray-600">Review all information before submitting</p>
+        </div>
+
+        <div class="space-y-6">
+            <!-- Test Information -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Test Information</h2>
+                    <button onclick="editStep(1)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">Test Name:</span> <span id="reviewTestName" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Test Code:</span> <span id="reviewTestCode" class="font-mono font-medium"></span></div>
+                </div>
+            </div>
+
+            <!-- Patient Information -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Patient Information</h2>
+                    <button onclick="editStep(2)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div><span class="text-gray-500">Name:</span> <span id="reviewPatientName" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Patient ID:</span> <span id="reviewPatientId" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Age:</span> <span id="reviewPatientAge" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Gender:</span> <span id="reviewPatientGender" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Insurance:</span> <span id="reviewInsuranceNumber" class="font-medium"></span></div>
+                    <div><span class="text-gray-500">Contact:</span> <span id="reviewPatientContact" class="font-medium"></span></div>
+                </div>
+            </div>
+
+            <!-- Clinical Symptoms -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Clinical Symptoms</h2>
+                    <button onclick="editStep(3)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <div id="reviewSymptoms" class="space-y-2"></div>
+            </div>
+
+            <!-- ICD-10 Codes -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">ICD-10 Codes</h2>
+                    <button onclick="editStep(4)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <div id="reviewICD10" class="flex flex-wrap gap-2"></div>
+            </div>
+
+            <!-- Clinical Justification -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Clinical Justification</h2>
+                    <button onclick="editStep(5)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <p id="reviewJustification" class="text-sm text-gray-700 whitespace-pre-wrap"></p>
+                <p class="text-xs text-gray-500 mt-2"><span id="reviewWordCount"></span> words</p>
+            </div>
+
+            <!-- Supporting Documents -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-lg font-semibold text-gray-900">Supporting Documents</h2>
+                    <button onclick="editStep(6)" class="text-blue-600 hover:text-blue-800 text-sm">Edit</button>
+                </div>
+                <div id="reviewDocuments"></div>
+            </div>
+
+            <!-- Validation Summary -->
+            <div id="validationSummary" class="bg-white rounded-lg shadow p-6">
+                <h2 class="text-lg font-semibold text-gray-900 mb-4">Validation Summary</h2>
+                <div id="validationChecks" class="space-y-2"></div>
+            </div>
+        </div>
+
+        <div class="flex justify-between mt-8">
+            <button onclick="goBack()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">← Previous</button>
+            <div class="flex gap-3">
+                <button onclick="saveDraftAndExit()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Save Draft</button>
+                <button id="submitBtn" onclick="submitRequest()" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    Submit Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let draft = null;
+        let currentTest = null;
+
+        function initStep7() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            draft = loadDraft();
+            if (!draft || !draft.testId) {
+                showToast('Please complete previous steps first', 'error');
+                setTimeout(() => window.location.href = 'create-step1.html', 2000);
+                return;
+            }
+            
+            currentTest = getTestById(draft.testId);
+            populateReview();
+            validateAll();
+        }
+
+        function populateReview() {
+            document.getElementById('reviewTestName').textContent = draft.testName || '';
+            document.getElementById('reviewTestCode').textContent = currentTest?.code || '';
+            document.getElementById('reviewPatientName').textContent = draft.patientName || '';
+            document.getElementById('reviewPatientId').textContent = draft.patientId || '';
+            document.getElementById('reviewPatientAge').textContent = draft.patientAge || '';
+            document.getElementById('reviewPatientGender').textContent = draft.patientGender || '';
+            document.getElementById('reviewInsuranceNumber').textContent = draft.insuranceNumber || '';
+            document.getElementById('reviewPatientContact').textContent = draft.patientContact || 'N/A';
+            
+            const symptomsDiv = document.getElementById('reviewSymptoms');
+            if (draft.symptoms && draft.symptoms.length > 0) {
+                symptomsDiv.innerHTML = draft.symptoms.map(s => `<div class="flex items-center text-sm"><svg class="h-4 w-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>${s}</div>`).join('');
+            } else {
+                symptomsDiv.innerHTML = '<p class="text-sm text-gray-500">No symptoms added</p>';
+            }
+            
+            const icd10Div = document.getElementById('reviewICD10');
+            if (draft.icd10Codes && draft.icd10Codes.length > 0) {
+                icd10Div.innerHTML = draft.icd10Codes.map(c => `<span class="px-3 py-1 bg-blue-100 text-blue-800 text-sm font-mono rounded">${c}</span>`).join('');
+            } else {
+                icd10Div.innerHTML = '<p class="text-sm text-gray-500">No ICD-10 codes added</p>';
+            }
+            
+            document.getElementById('reviewJustification').textContent = draft.justification || 'No justification provided';
+            document.getElementById('reviewWordCount').textContent = countWords(draft.justification || '');
+            
+            const docsDiv = document.getElementById('reviewDocuments');
+            if (draft.documents && draft.documents.length > 0) {
+                docsDiv.innerHTML = draft.documents.map(d => `<div class="flex items-center text-sm mb-2"><svg class="h-4 w-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>${d.name}</div>`).join('');
+            } else {
+                docsDiv.innerHTML = '<p class="text-sm text-gray-500">No documents uploaded</p>';
+            }
+        }
+
+        function validateAll() {
+            const checks = [];
+            const symptoms = draft.symptoms?.filter(s => s.trim()) || [];
+            const icd10 = draft.icd10Codes?.filter(c => c.trim()) || [];
+            const wordCount = countWords(draft.justification || '');
+            const docs = draft.documents || [];
+            
+            checks.push({valid: symptoms.length >= (currentTest?.minSymptoms || 0), text: `Symptoms: ${symptoms.length} provided (min ${currentTest?.minSymptoms || 0})`});
+            checks.push({valid: icd10.length > 0, text: `ICD-10 Codes: ${icd10.length} provided`});
+            checks.push({valid: wordCount >= (currentTest?.minJustificationLength || 0), text: `Justification: ${wordCount} words (min ${currentTest?.minJustificationLength || 0})`});
+            
+            if (currentTest?.documentsRequired) {
+                checks.push({valid: docs.length >= (currentTest?.minDocuments || 0), text: `Documents: ${docs.length} uploaded (min ${currentTest?.minDocuments || 0})`});
+            }
+            
+            const age = draft.patientAge;
+            const gender = draft.patientGender;
+            let ageGenderValid = true;
+            
+            if (currentTest?.ageRestriction) {
+                const {type, min, max} = currentTest.ageRestriction;
+                if (type === 'min' && age < min) ageGenderValid = false;
+                if (type === 'max' && age > max) ageGenderValid = false;
+                if (type === 'range' && (age < min || age > max)) ageGenderValid = false;
+            }
+            
+            if (currentTest?.genderRestriction && currentTest.genderRestriction !== 'both' && gender !== currentTest.genderRestriction) {
+                ageGenderValid = false;
+            }
+            
+            checks.push({valid: ageGenderValid, text: 'Age/Gender restrictions met'});
+            
+            const checksDiv = document.getElementById('validationChecks');
+            checksDiv.innerHTML = checks.map(c => `
+                <div class="flex items-center text-sm ${c.valid ? 'text-green-700' : 'text-red-700'}">
+                    <svg class="h-5 w-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        ${c.valid ? '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>' : '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>'}
+                    </svg>
+                    ${c.text}
+                </div>
+            `).join('');
+            
+            const allValid = checks.every(c => c.valid);
+            document.getElementById('submitBtn').disabled = !allValid;
+            if (!allValid) {
+                document.getElementById('submitBtn').classList.add('opacity-50', 'cursor-not-allowed');
+            }
+            
+            return allValid;
+        }
+
+        function editStep(step) {
+            window.location.href = `create-step${step}.html`;
+        }
+
+        function submitRequest() {
+            if (!validateAll()) {
+                showToast('Please fix validation errors before submitting', 'error');
+                return;
+            }
+            
+            const user = getCurrentUser();
+            const requestId = 'REQ-' + new Date().getFullYear() + '-' + String(Math.floor(Math.random() * 10000)).padStart(4, '0');
+            
+            const newRequest = {
+                id: requestId,
+                testId: draft.testId,
+                testName: draft.testName,
+                testCode: currentTest?.code,
+                patientName: draft.patientName,
+                patientId: draft.patientId,
+                patientAge: draft.patientAge,
+                patientGender: draft.patientGender,
+                insuranceNumber: draft.insuranceNumber,
+                patientContact: draft.patientContact,
+                symptoms: draft.symptoms,
+                icd10Codes: draft.icd10Codes,
+                justification: draft.justification,
+                documents: draft.documents,
+                status: 'submitted',
+                submittedBy: user?.nameEN,
+                submittedDate: new Date().toISOString(),
+                statusHistory: [{status: 'submitted', user: user?.nameEN, timestamp: new Date().toISOString()}]
+            };
+            
+            mockRequests.unshift(newRequest);
+            clearDraft();
+            
+            showToast('Request submitted successfully!', 'success');
+            setTimeout(() => window.location.href = `request-details.html?id=${requestId}`, 2000);
+        }
+
+        function goBack() {
+            window.location.href = 'create-step6.html';
+        }
+
+        function saveDraftAndExit() {
+            saveDraft(draft);
+            showToast('Draft saved successfully', 'success');
+            setTimeout(() => window.location.href = 'my-requests.html', 1500);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initStep7();
+    </script>
+    </div>
+</body>
+</html>

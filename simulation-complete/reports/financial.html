@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Report - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Financial Report</h1>
+                        <p class="mt-2 text-gray-600">Analyze costs and financial metrics</p>
+                    </div>
+                    <button onclick="exportReport()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">Export Report</button>
+                </div>
+
+                <!-- Financial Summary -->
+                <div class="grid grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Total Cost</p>
+                        <p class="text-3xl font-bold text-gray-900">$425,600</p>
+                        <p class="text-xs text-green-600 mt-1">↓ 8% from last month</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Approved Costs</p>
+                        <p class="text-3xl font-bold text-green-600">$332,000</p>
+                        <p class="text-xs text-gray-500 mt-1">78% of total</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Avg Cost/Request</p>
+                        <p class="text-3xl font-bold text-blue-600">$850</p>
+                        <p class="text-xs text-gray-500 mt-1">Per approved request</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Cost Savings</p>
+                        <p class="text-3xl font-bold text-purple-600">$93,600</p>
+                        <p class="text-xs text-green-600 mt-1">From rejections</p>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="grid grid-cols-2 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Monthly Cost Trend</h3>
+                        <canvas id="costTrendChart"></canvas>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h3 class="text-lg font-semibold text-gray-900 mb-4">Cost by Category</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cost Breakdown Table -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Cost Breakdown by Test</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Test Name</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Requests</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Approved</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Avg Cost</th>
+                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr><td class="px-6 py-4 text-sm font-medium text-gray-900">MRI Brain Scan</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">245</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">208</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">$1,200</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">$249,600</td>
+                                </tr>
+                                <tr><td class="px-6 py-4 text-sm font-medium text-gray-900">CT Scan Chest</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">198</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">182</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">$800</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">$145,600</td>
+                                </tr>
+                                <tr><td class="px-6 py-4 text-sm font-medium text-gray-900">Echocardiogram</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">156</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">137</td>
+                                    <td class="px-6 py-4 text-sm text-gray-900">$450</td>
+                                    <td class="px-6 py-4 text-sm font-semibold text-gray-900">$61,650</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script>
+        function initFinancialReport() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            createCharts();
+        }
+
+        function createCharts() {
+            new Chart(document.getElementById('costTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Total Cost ($)',
+                        data: [380000, 420000, 450000, 410000, 460000, 425600],
+                        borderColor: '#3b82f6',
+                        tension: 0.1
+                    }]
+                }
+            });
+            
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: ['Radiology', 'Laboratory', 'Cardiology', 'Oncology', 'Other'],
+                    datasets: [{
+                        data: [250000, 80000, 60000, 25000, 10600],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                    }]
+                }
+            });
+        }
+
+        function exportReport() {
+            alert('Financial report exported successfully!');
+        }
+
+        initFinancialReport();
+    </script>
+</body>
+</html>

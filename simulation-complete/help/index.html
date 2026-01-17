@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help & Documentation - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-6xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">Help & Documentation</h1>
+                    <p class="mt-2 text-gray-600">Learn how to use the Pre-Authorization Management System</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="grid grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="scrollToSection('getting-started')">
+                        <div class="h-12 w-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">Getting Started</h3>
+                        <p class="text-sm text-gray-600">Learn the basics of the system</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="scrollToSection('user-guides')">
+                        <div class="h-12 w-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">User Guides</h3>
+                        <p class="text-sm text-gray-600">Step-by-step instructions</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow cursor-pointer" onclick="scrollToSection('faq')">
+                        <div class="h-12 w-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+                            <svg class="h-6 w-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        </div>
+                        <h3 class="text-lg font-semibold text-gray-900 mb-2">FAQ</h3>
+                        <p class="text-sm text-gray-600">Frequently asked questions</p>
+                    </div>
+                </div>
+
+                <!-- Getting Started -->
+                <div id="getting-started" class="bg-white rounded-lg shadow p-8 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Getting Started</h2>
+                    <div class="space-y-4 text-gray-700">
+                        <p>Welcome to the Pre-Authorization Management System! This guide will help you get started.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mt-6">System Overview</h3>
+                        <p>The system allows healthcare providers to submit pre-authorization requests for medical tests and procedures. Reviewers can then evaluate and approve or reject these requests based on clinical criteria.</p>
+                        <h3 class="text-lg font-semibold text-gray-900 mt-6">Key Features</h3>
+                        <ul class="list-disc list-inside space-y-2 ml-4">
+                            <li>Submit pre-authorization requests through a 7-step wizard</li>
+                            <li>Track request status in real-time</li>
+                            <li>Review and make decisions on requests</li>
+                            <li>Manage tests and users (Admin only)</li>
+                            <li>Generate reports and analytics</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- User Guides -->
+                <div id="user-guides" class="bg-white rounded-lg shadow p-8 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">User Guides</h2>
+                    <div class="space-y-6">
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">How to Submit a Request</h3>
+                            <ol class="list-decimal list-inside space-y-2 ml-4 text-gray-700">
+                                <li>Click "Create New Request" from your dashboard</li>
+                                <li>Select the medical test from the list</li>
+                                <li>Enter patient information</li>
+                                <li>Add clinical symptoms</li>
+                                <li>Enter ICD-10 diagnostic codes</li>
+                                <li>Provide clinical justification</li>
+                                <li>Upload supporting documents</li>
+                                <li>Review and submit</li>
+                            </ol>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">How to Review a Request</h3>
+                            <ol class="list-decimal list-inside space-y-2 ml-4 text-gray-700">
+                                <li>Access the Review Queue from your dashboard</li>
+                                <li>Select a request to review</li>
+                                <li>Review all sections carefully</li>
+                                <li>Make a decision (Approve, Reject, Request More Info, or Transfer)</li>
+                                <li>Provide comments if needed</li>
+                                <li>Submit your decision</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ -->
+                <div id="faq" class="bg-white rounded-lg shadow p-8 mb-6">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+                    <div class="space-y-4">
+                        <div class="border-b border-gray-200 pb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">How long does it take to get a decision?</h3>
+                            <p class="text-gray-700">Most requests are reviewed within 24-48 hours. Urgent requests are prioritized and may be reviewed sooner.</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">Can I edit a request after submission?</h3>
+                            <p class="text-gray-700">Once submitted, requests cannot be edited. However, if a reviewer requests more information, you can resubmit with updates.</p>
+                        </div>
+                        <div class="border-b border-gray-200 pb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">What documents are required?</h3>
+                            <p class="text-gray-700">Required documents vary by test type. The system will indicate if documents are mandatory during the submission process.</p>
+                        </div>
+                        <div class="pb-4">
+                            <h3 class="text-lg font-semibold text-gray-900 mb-2">How do I contact support?</h3>
+                            <p class="text-gray-700">For technical support, email support@preauth.com or call +1-800-PREAUTH during business hours.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Support -->
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-6">
+                    <div class="flex">
+                        <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <div class="ml-3">
+                            <h3 class="text-lg font-semibold text-blue-800">Need More Help?</h3>
+                            <p class="mt-2 text-blue-700">Contact our support team at <a href="mailto:support@preauth.com" class="underline">support@preauth.com</a> or call +1-800-PREAUTH</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script>
+        function initHelp() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+        }
+
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        initHelp();
+    </script>
+</body>
+</html>

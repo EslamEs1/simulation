@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request - Clinical Justification - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="CreateRequestStep5">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="bg-white border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between text-xs">
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Test</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Patient</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">Symptoms</span></div><div class="flex-1 h-1 bg-green-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-green-600 text-white flex items-center justify-center font-semibold">✓</div><span class="ml-2 text-green-600 font-medium">ICD-10</span></div><div class="flex-1 h-1 bg-blue-600 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">5</div><span class="ml-2 text-blue-600 font-medium">Justification</span></div><div class="flex-1 h-1 bg-gray-200 mx-2"></div></div>
+                <div class="flex items-center flex-1"><div class="flex items-center"><div class="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-semibold">6</div><span class="ml-2 text-gray-500">Documents</span></div><div class="flex-1 h-1 bg-gray-200 mx-2"></div></div>
+                <div class="flex items-center"><div class="h-8 w-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center font-semibold">7</div><span class="ml-2 text-gray-500">Review</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Step 5: Clinical Justification</h1>
+            <p class="mt-2 text-gray-600">Provide detailed clinical justification for this test</p>
+            <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <p class="text-sm text-blue-800"><strong>Required:</strong> Minimum <span id="minWords">0</span> words</p>
+            </div>
+        </div>
+
+        <form id="justificationForm" class="bg-white rounded-lg shadow p-8">
+            <div class="space-y-6">
+                <div>
+                    <label for="justification" class="block text-sm font-medium text-gray-700 mb-2">
+                        Clinical Justification <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="justification" rows="10" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Provide detailed clinical justification explaining why this test is medically necessary for the patient..."></textarea>
+                    <div class="flex justify-between items-center mt-2">
+                        <p class="text-sm text-gray-600">
+                            Word count: <span id="wordCount" class="font-semibold">0</span>
+                        </p>
+                        <p id="prohibitedWarning" class="text-sm text-red-600 hidden">
+                            ⚠ Contains prohibited words
+                        </p>
+                    </div>
+                </div>
+
+                <div id="validationMessage" class="hidden p-4 rounded-lg"></div>
+            </div>
+
+            <div class="flex justify-between mt-8 pt-6 border-t">
+                <button type="button" onclick="goBack()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">← Previous</button>
+                <div class="flex gap-3">
+                    <button type="button" onclick="saveDraftAndExit()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Save Draft</button>
+                    <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Next: Documents →</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let currentTest = null;
+        let draft = null;
+
+        function initStep5() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            draft = loadDraft();
+            if (!draft || !draft.testId) {
+                showToast('Please complete previous steps first', 'error');
+                setTimeout(() => window.location.href = 'create-step1.html', 2000);
+                return;
+            }
+            
+            currentTest = getTestById(draft.testId);
+            document.getElementById('minWords').textContent = currentTest?.minJustificationLength || 0;
+            
+            if (draft.justification) {
+                document.getElementById('justification').value = draft.justification;
+            }
+            
+            document.getElementById('justification').addEventListener('input', validateJustification);
+            validateJustification();
+            setInterval(autoSaveDraft, 30000);
+        }
+
+        function validateJustification() {
+            const text = document.getElementById('justification').value;
+            const wordCount = countWords(text);
+            const minRequired = currentTest?.minJustificationLength || 0;
+            const prohibited = findProhibitedWords(text);
+            const msg = document.getElementById('validationMessage');
+            const prohibitedWarning = document.getElementById('prohibitedWarning');
+            
+            document.getElementById('wordCount').textContent = wordCount;
+            
+            if (prohibited.length > 0) {
+                prohibitedWarning.classList.remove('hidden');
+                prohibitedWarning.textContent = `⚠ Contains prohibited words: ${prohibited.join(', ')}`;
+            } else {
+                prohibitedWarning.classList.add('hidden');
+            }
+            
+            if (wordCount < minRequired) {
+                msg.className = 'p-4 bg-red-50 border border-red-200 rounded-lg text-sm text-red-800';
+                msg.textContent = `⚠ Justification must be at least ${minRequired} words. Currently: ${wordCount} words`;
+                msg.classList.remove('hidden');
+                return false;
+            } else if (prohibited.length > 0) {
+                msg.className = 'p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-sm text-yellow-800';
+                msg.textContent = `⚠ Warning: Contains ${prohibited.length} prohibited word(s). This may affect approval.`;
+                msg.classList.remove('hidden');
+                return true;
+            } else {
+                msg.className = 'p-4 bg-green-50 border border-green-200 rounded-lg text-sm text-green-800';
+                msg.textContent = `✓ Valid: ${wordCount} words provided`;
+                msg.classList.remove('hidden');
+                return true;
+            }
+        }
+
+        function autoSaveDraft() {
+            draft.justification = document.getElementById('justification').value;
+            saveDraft(draft);
+        }
+
+        document.getElementById('justificationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!validateJustification()) {
+                showToast('Please provide sufficient justification', 'error');
+                return;
+            }
+            autoSaveDraft();
+            window.location.href = 'create-step6.html';
+        });
+
+        function goBack() {
+            autoSaveDraft();
+            window.location.href = 'create-step4.html';
+        }
+
+        function saveDraftAndExit() {
+            autoSaveDraft();
+            showToast('Draft saved successfully', 'success');
+            setTimeout(() => window.location.href = 'my-requests.html', 1500);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initStep5();
+    </script>
+    </div>
+</body>
+</html>

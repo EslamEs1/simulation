@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notification Center - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
+                        <p class="mt-2 text-gray-600">Stay updated with system activities</p>
+                    </div>
+                    <button onclick="markAllRead()" class="text-blue-600 hover:text-blue-800 text-sm">Mark all as read</button>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow p-4 mb-6">
+                    <div class="flex gap-4">
+                        <button onclick="filterNotifications('all')" class="filter-btn px-4 py-2 text-sm rounded-lg bg-blue-100 text-blue-700">All</button>
+                        <button onclick="filterNotifications('unread')" class="filter-btn px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Unread</button>
+                        <button onclick="filterNotifications('requests')" class="filter-btn px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Requests</button>
+                        <button onclick="filterNotifications('reviews')" class="filter-btn px-4 py-2 text-sm rounded-lg hover:bg-gray-100">Reviews</button>
+                        <button onclick="filterNotifications('system')" class="filter-btn px-4 py-2 text-sm rounded-lg hover:bg-gray-100">System</button>
+                    </div>
+                </div>
+
+                <!-- Notifications List -->
+                <div class="space-y-3" id="notificationsList"></div>
+
+                <!-- Empty State -->
+                <div id="emptyState" class="hidden bg-white rounded-lg shadow p-12 text-center">
+                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    <p class="mt-4 text-gray-500">No notifications</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script>
+        let notifications = [];
+        let currentFilter = 'all';
+
+        function initNotifications() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            notifications = [
+                {id: 1, type: 'requests', title: 'New Request Submitted', message: 'Request REQ-2024-0123 has been submitted', time: '5 minutes ago', read: false},
+                {id: 2, type: 'reviews', title: 'Request Approved', message: 'Your request REQ-2024-0120 has been approved', time: '1 hour ago', read: false},
+                {id: 3, type: 'requests', title: 'More Info Needed', message: 'Request REQ-2024-0119 requires additional information', time: '2 hours ago', read: true},
+                {id: 4, type: 'system', title: 'System Maintenance', message: 'Scheduled maintenance on Sunday 2AM-4AM', time: '1 day ago', read: true},
+                {id: 5, type: 'reviews', title: 'Request Assigned', message: 'New request REQ-2024-0124 assigned to you', time: '2 days ago', read: true}
+            ];
+            
+            renderNotifications();
+        }
+
+        function filterNotifications(filter) {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-100', 'text-blue-700');
+                btn.classList.add('hover:bg-gray-100');
+            });
+            event.target.classList.add('bg-blue-100', 'text-blue-700');
+            event.target.classList.remove('hover:bg-gray-100');
+            renderNotifications();
+        }
+
+        function renderNotifications() {
+            let filtered = notifications;
+            if (currentFilter === 'unread') filtered = notifications.filter(n => !n.read);
+            else if (currentFilter !== 'all') filtered = notifications.filter(n => n.type === currentFilter);
+            
+            const container = document.getElementById('notificationsList');
+            const emptyState = document.getElementById('emptyState');
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            }
+            
+            emptyState.classList.add('hidden');
+            container.innerHTML = filtered.map(n => `
+                <div class="bg-white rounded-lg shadow p-4 ${n.read ? '' : 'border-l-4 border-blue-500'}">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-2 mb-1">
+                                ${getTypeIcon(n.type)}
+                                <h3 class="text-sm font-semibold text-gray-900">${n.title}</h3>
+                                ${!n.read ? '<span class="px-2 py-0.5 text-xs font-semibold bg-blue-100 text-blue-800 rounded-full">New</span>' : ''}
+                            </div>
+                            <p class="text-sm text-gray-600 ml-6">${n.message}</p>
+                            <p class="text-xs text-gray-400 ml-6 mt-1">${n.time}</p>
+                        </div>
+                        <div class="flex gap-2">
+                            ${!n.read ? `<button onclick="markRead(${n.id})" class="text-blue-600 hover:text-blue-800 text-sm">Mark read</button>` : ''}
+                            <button onclick="deleteNotification(${n.id})" class="text-red-600 hover:text-red-800 text-sm">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTypeIcon(type) {
+            const icons = {
+                requests: '<svg class="h-5 w-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>',
+                reviews: '<svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>',
+                system: '<svg class="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>'
+            };
+            return icons[type] || icons.system;
+        }
+
+        function markRead(id) {
+            const notification = notifications.find(n => n.id === id);
+            if (notification) notification.read = true;
+            renderNotifications();
+        }
+
+        function markAllRead() {
+            notifications.forEach(n => n.read = true);
+            renderNotifications();
+            showToast('All notifications marked as read', 'success');
+        }
+
+        function deleteNotification(id) {
+            notifications = notifications.filter(n => n.id !== id);
+            renderNotifications();
+            showToast('Notification deleted', 'success');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initNotifications();
+    </script>
+</body>
+</html>

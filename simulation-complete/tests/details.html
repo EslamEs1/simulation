@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Details - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <a href="list.html" class="text-sm text-blue-600 hover:text-blue-800">← Back to Tests</a>
+                        <a href="../index.html" class="text-sm text-blue-600 hover:text-blue-800">Login</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Test Header -->
+            <div class="bg-white rounded-lg shadow p-8 mb-6">
+                <div class="flex items-start justify-between mb-6">
+                    <div class="flex-1">
+                        <h1 class="text-3xl font-bold text-gray-900 mb-2" id="testName"></h1>
+                        <p class="text-lg text-gray-600" id="testNameAR"></p>
+                    </div>
+                    <span id="preAuthBadge" class="hidden px-4 py-2 bg-blue-100 text-blue-800 text-sm font-semibold rounded-lg">Pre-Authorization Required</span>
+                </div>
+                
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-gray-200">
+                    <div>
+                        <p class="text-sm text-gray-500">Test Code</p>
+                        <p class="text-base font-mono font-semibold text-gray-900" id="testCode"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Category</p>
+                        <p class="text-base font-semibold text-gray-900" id="testCategory"></p>
+                    </div>
+                    <div>
+                        <p class="text-sm text-gray-500">Status</p>
+                        <span id="testStatus" class="inline-block px-3 py-1 text-sm font-semibold rounded-full"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Description</h2>
+                <p class="text-gray-700" id="testDescription"></p>
+            </div>
+
+            <!-- Pre-Authorization Requirements -->
+            <div id="requirementsSection" class="hidden bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Pre-Authorization Requirements</h2>
+                <div class="bg-blue-50 border-l-4 border-blue-400 p-6">
+                    <h3 class="text-sm font-semibold text-blue-900 mb-4">Required Information</h3>
+                    <ul class="space-y-3 text-sm text-blue-800">
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><strong>Clinical Symptoms:</strong> Minimum <span id="minSymptoms">0</span> symptoms required</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><strong>ICD-10 Codes:</strong> Valid diagnostic codes from approved list</span>
+                        </li>
+                        <li class="flex items-start">
+                            <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><strong>Clinical Justification:</strong> Minimum <span id="minJustification">0</span> words</span>
+                        </li>
+                        <li id="documentsRequired" class="hidden flex items-start">
+                            <svg class="h-5 w-5 text-blue-600 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            <span><strong>Supporting Documents:</strong> Required</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Approved ICD-10 Codes -->
+            <div id="icd10Section" class="hidden bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Approved ICD-10 Codes</h2>
+                <div id="icd10List" class="grid grid-cols-2 gap-3"></div>
+            </div>
+
+            <!-- Age/Gender Restrictions -->
+            <div id="restrictionsSection" class="hidden bg-white rounded-lg shadow p-6 mb-6">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4">Patient Restrictions</h2>
+                <div class="space-y-3">
+                    <div id="ageRestriction" class="hidden flex items-center text-sm text-gray-700">
+                        <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span id="ageText"></span>
+                    </div>
+                    <div id="genderRestriction" class="hidden flex items-center text-sm text-gray-700">
+                        <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span id="genderText"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How to Request -->
+            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border-l-4 border-blue-500 p-6 rounded-lg">
+                <h3 class="text-lg font-semibold text-gray-900 mb-3">How to Request This Test</h3>
+                <ol class="list-decimal list-inside space-y-2 text-sm text-gray-700">
+                    <li>Login to the Pre-Authorization System</li>
+                    <li>Navigate to "Create New Request"</li>
+                    <li>Select this test from the list</li>
+                    <li>Complete all required information</li>
+                    <li>Submit for review</li>
+                </ol>
+                <a href="../index.html" class="inline-block mt-4 px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Login to Request</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const testId = urlParams.get('id');
+
+        function initTestDetails() {
+            if (!testId) {
+                window.location.href = 'list.html';
+                return;
+            }
+            
+            const test = mockTests.find(t => t.id === testId);
+            if (!test) {
+                window.location.href = 'list.html';
+                return;
+            }
+            
+            loadTestDetails(test);
+        }
+
+        function loadTestDetails(test) {
+            document.getElementById('testName').textContent = test.nameEN;
+            document.getElementById('testNameAR').textContent = test.nameAR || '';
+            document.getElementById('testCode').textContent = test.code;
+            document.getElementById('testCategory').textContent = test.category;
+            document.getElementById('testDescription').textContent = test.description || 'No description available';
+            
+            const statusBadge = document.getElementById('testStatus');
+            statusBadge.textContent = test.status || 'Active';
+            statusBadge.className = `inline-block px-3 py-1 text-sm font-semibold rounded-full ${test.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`;
+            
+            if (test.requiresPreAuth) {
+                document.getElementById('preAuthBadge').classList.remove('hidden');
+                document.getElementById('requirementsSection').classList.remove('hidden');
+                document.getElementById('minSymptoms').textContent = test.minSymptoms || 0;
+                document.getElementById('minJustification').textContent = test.minJustificationLength || 0;
+                
+                if (test.documentsRequired) {
+                    document.getElementById('documentsRequired').classList.remove('hidden');
+                }
+            }
+            
+            if (test.approvedICD10Codes && test.approvedICD10Codes.length > 0) {
+                document.getElementById('icd10Section').classList.remove('hidden');
+                const icd10List = document.getElementById('icd10List');
+                icd10List.innerHTML = test.approvedICD10Codes.map(code => `
+                    <div class="p-3 bg-gray-50 rounded-lg">
+                        <p class="font-mono text-sm font-semibold text-gray-900">${code}</p>
+                    </div>
+                `).join('');
+            }
+            
+            if (test.ageRestriction || test.genderRestriction) {
+                document.getElementById('restrictionsSection').classList.remove('hidden');
+                
+                if (test.ageRestriction) {
+                    document.getElementById('ageRestriction').classList.remove('hidden');
+                    document.getElementById('ageText').textContent = test.ageRestriction;
+                }
+                
+                if (test.genderRestriction) {
+                    document.getElementById('genderRestriction').classList.remove('hidden');
+                    document.getElementById('genderText').textContent = `Gender: ${test.genderRestriction}`;
+                }
+            }
+        }
+
+        initTestDetails();
+    </script>
+</body>
+</html>

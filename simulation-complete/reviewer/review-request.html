@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Request - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="ReviewRequest">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="review-queue.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Review Queue</a>
+                        <a href="my-reviews.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">My Reviews</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Reviewer</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+        <!-- Header with Actions -->
+        <div class="mb-8 flex justify-between items-start">
+            <div>
+                <div class="flex items-center gap-3 mb-2">
+                    <h1 class="text-3xl font-bold text-gray-900" id="requestId">REQ-2026-001</h1>
+                    <span id="statusBadge" class="px-3 py-1 text-sm font-semibold rounded-full"></span>
+                    <span id="priorityBadge" class="px-3 py-1 text-sm font-semibold rounded-full"></span>
+                </div>
+                <p class="text-gray-600">Submitted: <span id="submittedDate"></span> | Days pending: <span id="daysPending"></span></p>
+            </div>
+            <div class="flex gap-3">
+                <button onclick="window.history.back()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    ← Back to Queue
+                </button>
+                <button onclick="showTransferModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Transfer
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Main Content (Left 2/3) -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Section 1: Patient Information -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center">
+                        <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">1</div>
+                        <h2 class="text-lg font-semibold text-gray-900">Patient Information</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Full Name</label>
+                                <p class="text-gray-900 font-medium" id="patientName"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Patient ID</label>
+                                <p class="text-gray-900 font-medium" id="patientId"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Age</label>
+                                <p class="text-gray-900" id="patientAge"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Gender</label>
+                                <p class="text-gray-900" id="patientGender"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Insurance Number</label>
+                                <p class="text-gray-900 font-mono" id="insuranceNumber"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Contact</label>
+                                <p class="text-gray-900" id="patientContact"></p>
+                            </div>
+                        </div>
+                        <button onclick="viewPatientHistory()" class="mt-4 text-sm text-blue-600 hover:text-blue-800">
+                            View Patient History →
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Section 2: Test Information -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center">
+                        <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">2</div>
+                        <h2 class="text-lg font-semibold text-gray-900">Test Information</h2>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2">
+                                <label class="text-sm font-medium text-gray-500">Test Name</label>
+                                <p class="text-gray-900 font-medium text-lg" id="testName"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Test Code</label>
+                                <p class="text-gray-900 font-mono" id="testCode"></p>
+                            </div>
+                            <div>
+                                <label class="text-sm font-medium text-gray-500">Category</label>
+                                <p id="testCategory"></p>
+                            </div>
+                            <div class="col-span-2">
+                                <label class="text-sm font-medium text-gray-500">Test Requirements</label>
+                                <div id="testRequirements" class="mt-2 p-3 bg-gray-50 rounded text-sm text-gray-700"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Clinical Symptoms -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">3</div>
+                            <h2 class="text-lg font-semibold text-gray-900">Clinical Symptoms</h2>
+                        </div>
+                        <span id="symptomsValidation" class="text-sm"></span>
+                    </div>
+                    <div class="p-6">
+                        <div id="symptomsList" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Section 4: ICD-10 Codes -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">4</div>
+                            <h2 class="text-lg font-semibold text-gray-900">ICD-10 Codes</h2>
+                        </div>
+                        <span id="icd10Validation" class="text-sm"></span>
+                    </div>
+                    <div class="p-6">
+                        <div id="icd10List" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Section 5: Clinical Justification -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                        <div class="flex items-center">
+                            <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">5</div>
+                            <h2 class="text-lg font-semibold text-gray-900">Clinical Justification</h2>
+                        </div>
+                        <span id="justificationValidation" class="text-sm"></span>
+                    </div>
+                    <div class="p-6">
+                        <div id="justificationText" class="text-gray-700 whitespace-pre-wrap"></div>
+                        <div class="mt-4 flex items-center gap-4 text-sm text-gray-500">
+                            <span>Word count: <span id="wordCount" class="font-semibold"></span></span>
+                            <span id="prohibitedWordsWarning" class="text-red-600 font-semibold hidden"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: Supporting Documents -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center">
+                        <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">6</div>
+                        <h2 class="text-lg font-semibold text-gray-900">Supporting Documents</h2>
+                    </div>
+                    <div class="p-6">
+                        <div id="documentsList" class="space-y-2"></div>
+                    </div>
+                </div>
+
+                <!-- Section 7: Internal Notes -->
+                <div class="bg-white rounded-lg shadow">
+                    <div class="px-6 py-4 border-b border-gray-200 flex items-center">
+                        <div class="flex items-center justify-center h-8 w-8 rounded-full bg-blue-100 text-blue-600 font-semibold mr-3">7</div>
+                        <h2 class="text-lg font-semibold text-gray-900">Internal Notes (Reviewer Only)</h2>
+                    </div>
+                    <div class="p-6">
+                        <textarea id="internalNotes" rows="4" 
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                            placeholder="Add internal notes for this review (not visible to requester)..."></textarea>
+                        <button onclick="saveNotes()" class="mt-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+                            Save Notes
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar (Right 1/3) -->
+            <div class="space-y-6">
+                <!-- Validation Summary -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Validation Summary</h3>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Symptoms Check</span>
+                            <span id="symptomsCheck" class="text-sm font-semibold"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">ICD-10 Codes</span>
+                            <span id="icd10Check" class="text-sm font-semibold"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Justification</span>
+                            <span id="justificationCheck" class="text-sm font-semibold"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Documents</span>
+                            <span id="documentsCheck" class="text-sm font-semibold"></span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-gray-600">Age/Gender</span>
+                            <span id="ageGenderCheck" class="text-sm font-semibold"></span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-gray-200">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-semibold text-gray-900">Overall Status</span>
+                            <span id="overallStatus" class="text-sm font-bold"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Decision Actions -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Decision</h3>
+                    <div class="space-y-3">
+                        <button onclick="showApproveModal()" class="w-full px-4 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">
+                            ✓ Approve Request
+                        </button>
+                        <button onclick="showRejectModal()" class="w-full px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 font-medium">
+                            ✗ Reject Request
+                        </button>
+                        <button onclick="showMoreInfoModal()" class="w-full px-4 py-3 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 font-medium">
+                            ⓘ Request More Info
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Request History -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Request History</h3>
+                    <div id="requestHistory" class="space-y-3 text-sm">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Approve Modal -->
+    <div id="approveModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Approve Request</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="approvalNumber" class="block text-sm font-medium text-gray-700 mb-2">
+                        Approval Number <span class="text-red-500">*</span>
+                    </label>
+                    <input type="text" id="approvalNumber" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                        placeholder="e.g., APP-2026-001">
+                </div>
+                <div>
+                    <label for="expirationDate" class="block text-sm font-medium text-gray-700 mb-2">
+                        Expiration Date <span class="text-red-500">*</span>
+                    </label>
+                    <input type="date" id="expirationDate" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500">
+                </div>
+                <div>
+                    <label for="approvalNotes" class="block text-sm font-medium text-gray-700 mb-2">
+                        Notes (Optional)
+                    </label>
+                    <textarea id="approvalNotes" rows="3"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                        placeholder="Additional notes..."></textarea>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('approveModal')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="approveRequest()" class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    Confirm Approval
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reject Modal -->
+    <div id="rejectModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Reject Request</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="rejectionReason" class="block text-sm font-medium text-gray-700 mb-2">
+                        Rejection Reason <span class="text-red-500">*</span>
+                    </label>
+                    <select id="rejectionReason" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500">
+                        <option value="">Select reason...</option>
+                        <option value="insufficient_justification">Insufficient Clinical Justification</option>
+                        <option value="missing_symptoms">Missing Required Symptoms</option>
+                        <option value="invalid_icd10">Invalid or Non-Approved ICD-10 Codes</option>
+                        <option value="age_restriction">Age Restriction Not Met</option>
+                        <option value="gender_restriction">Gender Restriction Not Met</option>
+                        <option value="prohibited_words">Contains Prohibited Words (Routine/Screening)</option>
+                        <option value="missing_documents">Missing Required Documents</option>
+                        <option value="other">Other (specify in details)</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="rejectionDetails" class="block text-sm font-medium text-gray-700 mb-2">
+                        Additional Details <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="rejectionDetails" rows="4" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
+                        placeholder="Provide detailed explanation for rejection..."></textarea>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('rejectModal')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="rejectRequest()" class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Confirm Rejection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- More Info Modal -->
+    <div id="moreInfoModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Request More Information</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="moreInfoMessage" class="block text-sm font-medium text-gray-700 mb-2">
+                        Message to Requester <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="moreInfoMessage" rows="5" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500"
+                        placeholder="Specify what additional information is needed..."></textarea>
+                    <p class="mt-1 text-sm text-gray-500">Be specific about what information is required</p>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('moreInfoModal')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="requestMoreInfo()" class="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700">
+                    Send Request
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transfer Modal -->
+    <div id="transferModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-lg bg-white">
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold text-gray-900">Transfer Request</h3>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label for="transferReviewer" class="block text-sm font-medium text-gray-700 mb-2">
+                        Transfer To <span class="text-red-500">*</span>
+                    </label>
+                    <select id="transferReviewer" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">Select reviewer...</option>
+                        <!-- Populated by JavaScript -->
+                    </select>
+                </div>
+                <div>
+                    <label for="transferReason" class="block text-sm font-medium text-gray-700 mb-2">
+                        Transfer Reason <span class="text-red-500">*</span>
+                    </label>
+                    <textarea id="transferReason" rows="3" required
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                        placeholder="Reason for transfer..."></textarea>
+                </div>
+            </div>
+            <div class="flex gap-3 mt-6">
+                <button onclick="closeModal('transferModal')" class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <button onclick="transferRequest()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Transfer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let currentRequest = null;
+        let currentTest = null;
+
+        function initReviewRequest() {
+            requirePermission('review_requests');
+            
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Get request ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestId = urlParams.get('id');
+            
+            if (!requestId) {
+                showToast('No request ID provided', 'error');
+                setTimeout(() => window.location.href = 'review-queue.html', 2000);
+                return;
+            }
+            
+            // Check request lock
+            if (!checkRequestLock(requestId)) {
+                setTimeout(() => window.location.href = 'review-queue.html', 3000);
+                return;
+            }
+            
+            loadRequest(requestId);
+            populateTransferReviewers();
+        }
+
+        function loadRequest(requestId) {
+            currentRequest = getRequestById(requestId);
+            if (!currentRequest) {
+                showToast('Request not found', 'error');
+                setTimeout(() => window.location.href = 'review-queue.html', 2000);
+                return;
+            }
+            
+            currentTest = getTestById(currentRequest.testId);
+            
+            // Update header
+            document.getElementById('requestId').textContent = currentRequest.id;
+            document.getElementById('statusBadge').className = `px-3 py-1 text-sm font-semibold rounded-full ${getStatusBadgeClass(currentRequest.status)}`;
+            document.getElementById('statusBadge').textContent = getStatusLabel(currentRequest.status);
+            
+            const days = daysSince(currentRequest.submittedDate);
+            document.getElementById('priorityBadge').className = `px-3 py-1 text-sm font-semibold rounded-full ${getPriorityColor(days)}`;
+            document.getElementById('priorityBadge').textContent = getPriorityLabel(days);
+            
+            document.getElementById('submittedDate').textContent = formatDate(currentRequest.submittedDate);
+            document.getElementById('daysPending').textContent = days;
+            
+            // Section 1: Patient Information
+            document.getElementById('patientName').textContent = currentRequest.patientName;
+            document.getElementById('patientId').textContent = currentRequest.patientId;
+            document.getElementById('patientAge').textContent = currentRequest.patientAge;
+            document.getElementById('patientGender').textContent = currentRequest.patientGender;
+            document.getElementById('insuranceNumber').textContent = currentRequest.insuranceNumber;
+            document.getElementById('patientContact').textContent = currentRequest.patientContact || 'N/A';
+            
+            // Section 2: Test Information
+            document.getElementById('testName').textContent = currentRequest.testName;
+            document.getElementById('testCode').textContent = currentTest?.code || 'N/A';
+            document.getElementById('testCategory').innerHTML = `<span class="px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(currentTest?.category)}">${currentTest?.category || 'N/A'}</span>`;
+            
+            if (currentTest) {
+                document.getElementById('testRequirements').innerHTML = `
+                    <p><strong>Min Symptoms:</strong> ${currentTest.minSymptoms}</p>
+                    <p><strong>Min Justification:</strong> ${currentTest.minJustificationLength} words</p>
+                    ${currentTest.ageRestriction?.type !== 'none' ? `<p><strong>Age:</strong> ${getAgeRestrictionText(currentTest.ageRestriction)}</p>` : ''}
+                    ${currentTest.genderRestriction !== 'both' ? `<p><strong>Gender:</strong> ${currentTest.genderRestriction} only</p>` : ''}
+                `;
+            }
+            
+            // Section 3: Clinical Symptoms
+            const symptomsList = document.getElementById('symptomsList');
+            if (currentRequest.symptoms && currentRequest.symptoms.length > 0) {
+                symptomsList.innerHTML = currentRequest.symptoms.map(symptom => 
+                    `<div class="flex items-center"><svg class="h-5 w-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg><span>${symptom}</span></div>`
+                ).join('');
+            } else {
+                symptomsList.innerHTML = '<p class="text-gray-500">No symptoms listed</p>';
+            }
+            
+            // Section 4: ICD-10 Codes
+            const icd10List = document.getElementById('icd10List');
+            if (currentRequest.icd10Codes && currentRequest.icd10Codes.length > 0) {
+                icd10List.innerHTML = currentRequest.icd10Codes.map(code => {
+                    const isApproved = currentTest?.icd10CodesApproved?.includes(code);
+                    return `
+                        <div class="flex items-center justify-between p-2 rounded ${isApproved ? 'bg-green-50' : 'bg-yellow-50'}">
+                            <span class="font-mono font-semibold">${code}</span>
+                            <span class="text-xs px-2 py-1 rounded ${isApproved ? 'bg-green-200 text-green-800' : 'bg-yellow-200 text-yellow-800'}">
+                                ${isApproved ? 'Approved' : 'Not in approved list'}
+                            </span>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                icd10List.innerHTML = '<p class="text-gray-500">No ICD-10 codes provided</p>';
+            }
+            
+            // Section 5: Clinical Justification
+            document.getElementById('justificationText').textContent = currentRequest.justification || 'No justification provided';
+            const wordCount = countWords(currentRequest.justification);
+            document.getElementById('wordCount').textContent = wordCount;
+            
+            const prohibitedWords = findProhibitedWords(currentRequest.justification, currentTest?.prohibitedWords || []);
+            if (prohibitedWords.length > 0) {
+                document.getElementById('prohibitedWordsWarning').textContent = `⚠ Contains prohibited words: ${prohibitedWords.join(', ')}`;
+                document.getElementById('prohibitedWordsWarning').classList.remove('hidden');
+            }
+            
+            // Section 6: Supporting Documents
+            const documentsList = document.getElementById('documentsList');
+            if (currentRequest.documents && currentRequest.documents.length > 0) {
+                documentsList.innerHTML = currentRequest.documents.map(doc => `
+                    <div class="flex items-center justify-between p-3 border border-gray-200 rounded">
+                        <div class="flex items-center">
+                            <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="text-sm">${doc.name}</span>
+                        </div>
+                        <button class="text-sm text-blue-600 hover:text-blue-800">View</button>
+                    </div>
+                `).join('');
+            } else {
+                documentsList.innerHTML = '<p class="text-gray-500">No documents uploaded</p>';
+            }
+            
+            // Perform validation
+            performValidation();
+            
+            // Load request history
+            loadRequestHistory();
+        }
+
+        function performValidation() {
+            let allValid = true;
+            
+            // Symptoms validation
+            const symptomsValid = currentRequest.symptoms && currentRequest.symptoms.length >= (currentTest?.minSymptoms || 0);
+            document.getElementById('symptomsCheck').innerHTML = symptomsValid ? '<span class="text-green-600">✓ Valid</span>' : '<span class="text-red-600">✗ Invalid</span>';
+            document.getElementById('symptomsValidation').innerHTML = symptomsValid ? 
+                `<span class="text-green-600 text-sm">✓ ${currentRequest.symptoms.length} of ${currentTest?.minSymptoms} required</span>` :
+                `<span class="text-red-600 text-sm">✗ Only ${currentRequest.symptoms?.length || 0} of ${currentTest?.minSymptoms} required</span>`;
+            if (!symptomsValid) allValid = false;
+            
+            // ICD-10 validation
+            const hasApprovedCode = currentRequest.icd10Codes?.some(code => currentTest?.icd10CodesApproved?.includes(code));
+            document.getElementById('icd10Check').innerHTML = hasApprovedCode ? '<span class="text-green-600">✓ Valid</span>' : '<span class="text-yellow-600">⚠ Warning</span>';
+            document.getElementById('icd10Validation').innerHTML = hasApprovedCode ?
+                '<span class="text-green-600 text-sm">✓ Contains approved codes</span>' :
+                '<span class="text-yellow-600 text-sm">⚠ No approved codes</span>';
+            
+            // Justification validation
+            const wordCount = countWords(currentRequest.justification);
+            const prohibitedWords = findProhibitedWords(currentRequest.justification, currentTest?.prohibitedWords || []);
+            const justificationValid = wordCount >= (currentTest?.minJustificationLength || 0) && prohibitedWords.length === 0;
+            document.getElementById('justificationCheck').innerHTML = justificationValid ? '<span class="text-green-600">✓ Valid</span>' : '<span class="text-red-600">✗ Invalid</span>';
+            document.getElementById('justificationValidation').innerHTML = justificationValid ?
+                `<span class="text-green-600 text-sm">✓ ${wordCount} words (min ${currentTest?.minJustificationLength})</span>` :
+                `<span class="text-red-600 text-sm">✗ ${prohibitedWords.length > 0 ? 'Contains prohibited words' : `Only ${wordCount} of ${currentTest?.minJustificationLength} words`}</span>`;
+            if (!justificationValid) allValid = false;
+            
+            // Documents validation
+            const documentsValid = !currentTest?.documentsRequired || (currentRequest.documents && currentRequest.documents.length >= (currentTest?.minDocuments || 1));
+            document.getElementById('documentsCheck').innerHTML = documentsValid ? '<span class="text-green-600">✓ Valid</span>' : '<span class="text-red-600">✗ Invalid</span>';
+            if (!documentsValid) allValid = false;
+            
+            // Age/Gender validation
+            const ageGenderValid = checkAgeGenderRestrictions();
+            document.getElementById('ageGenderCheck').innerHTML = ageGenderValid ? '<span class="text-green-600">✓ Valid</span>' : '<span class="text-red-600">✗ Invalid</span>';
+            if (!ageGenderValid) allValid = false;
+            
+            // Overall status
+            document.getElementById('overallStatus').innerHTML = allValid ?
+                '<span class="text-green-600">✓ All Checks Passed</span>' :
+                '<span class="text-red-600">✗ Issues Found</span>';
+        }
+
+        function checkAgeGenderRestrictions() {
+            if (!currentTest) return true;
+            
+            // Age check
+            if (currentTest.ageRestriction?.type === 'min' && currentRequest.patientAge < currentTest.ageRestriction.min) return false;
+            if (currentTest.ageRestriction?.type === 'max' && currentRequest.patientAge > currentTest.ageRestriction.max) return false;
+            if (currentTest.ageRestriction?.type === 'range' && 
+                (currentRequest.patientAge < currentTest.ageRestriction.min || currentRequest.patientAge > currentTest.ageRestriction.max)) return false;
+            
+            // Gender check
+            if (currentTest.genderRestriction !== 'both' && currentRequest.patientGender !== currentTest.genderRestriction) return false;
+            
+            return true;
+        }
+
+        function getAgeRestrictionText(restriction) {
+            if (restriction.type === 'min') return `Minimum ${restriction.min} years`;
+            if (restriction.type === 'max') return `Maximum ${restriction.max} years`;
+            if (restriction.type === 'range') return `${restriction.min}-${restriction.max} years`;
+            return 'No restriction';
+        }
+
+        function loadRequestHistory() {
+            const history = currentRequest.statusHistory || [];
+            const historyDiv = document.getElementById('requestHistory');
+            
+            if (history.length === 0) {
+                historyDiv.innerHTML = '<p class="text-gray-500">No history available</p>';
+                return;
+            }
+            
+            historyDiv.innerHTML = history.map(entry => `
+                <div class="border-l-2 border-blue-500 pl-3">
+                    <p class="font-semibold text-gray-900">${getStatusLabel(entry.status)}</p>
+                    <p class="text-gray-600">${entry.user}</p>
+                    <p class="text-gray-500 text-xs">${formatDateTime(entry.timestamp)}</p>
+                </div>
+            `).join('');
+        }
+
+        function populateTransferReviewers() {
+            const select = document.getElementById('transferReviewer');
+            const currentUser = getCurrentUser();
+            const reviewers = mockUsers.filter(u => u.role === 'reviewer' && u.status === 'active' && u.id !== currentUser?.id);
+            
+            select.innerHTML = '<option value="">Select reviewer...</option>' +
+                reviewers.map(r => `<option value="${r.id}">${r.nameEN}</option>`).join('');
+        }
+
+        // Modal functions
+        function showApproveModal() {
+            document.getElementById('approveModal').classList.remove('hidden');
+            // Set default expiration date (3 months from now)
+            const threeMonths = new Date();
+            threeMonths.setMonth(threeMonths.getMonth() + 3);
+            document.getElementById('expirationDate').valueAsDate = threeMonths;
+        }
+
+        function showRejectModal() {
+            document.getElementById('rejectModal').classList.remove('hidden');
+        }
+
+        function showMoreInfoModal() {
+            document.getElementById('moreInfoModal').classList.remove('hidden');
+        }
+
+        function showTransferModal() {
+            document.getElementById('transferModal').classList.remove('hidden');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function approveRequest() {
+            const approvalNumber = document.getElementById('approvalNumber').value;
+            const expirationDate = document.getElementById('expirationDate').value;
+            const notes = document.getElementById('approvalNotes').value;
+            
+            if (!approvalNumber || !expirationDate) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                transitionRequest(currentRequest.id, 'approved', {
+                    approvalNumber,
+                    expirationDate,
+                    notes
+                });
+                
+                releaseRequestLock(currentRequest.id);
+                showToast('Request approved successfully!', 'success');
+                setTimeout(() => window.location.href = 'review-queue.html', 2000);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function rejectRequest() {
+            const reason = document.getElementById('rejectionReason').value;
+            const details = document.getElementById('rejectionDetails').value;
+            
+            if (!reason || !details) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            try {
+                transitionRequest(currentRequest.id, 'rejected', {
+                    reason,
+                    details
+                });
+                
+                releaseRequestLock(currentRequest.id);
+                showToast('Request rejected', 'success');
+                setTimeout(() => window.location.href = 'review-queue.html', 2000);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function requestMoreInfo() {
+            const message = document.getElementById('moreInfoMessage').value;
+            
+            if (!message || message.length < 10) {
+                showToast('Please provide a detailed message (min 10 characters)', 'error');
+                return;
+            }
+            
+            try {
+                transitionRequest(currentRequest.id, 'more_info_needed', {
+                    message
+                });
+                
+                releaseRequestLock(currentRequest.id);
+                showToast('More information requested', 'success');
+                setTimeout(() => window.location.href = 'review-queue.html', 2000);
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        }
+
+        function transferRequest() {
+            const reviewerId = document.getElementById('transferReviewer').value;
+            const reason = document.getElementById('transferReason').value;
+            
+            if (!reviewerId || !reason) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            handleRequestTransfer(currentRequest.id, reviewerId, reason);
+            releaseRequestLock(currentRequest.id);
+            showToast('Request transferred successfully', 'success');
+            setTimeout(() => window.location.href = 'review-queue.html', 2000);
+        }
+
+        function saveNotes() {
+            const notes = document.getElementById('internalNotes').value;
+            currentRequest.internalNotes = notes;
+            showToast('Notes saved', 'success');
+        }
+
+        function viewPatientHistory() {
+            window.location.href = `patient-history.html?id=${currentRequest.patientId}`;
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                hormones: 'bg-purple-100 text-purple-800',
+                antibodies: 'bg-blue-100 text-blue-800',
+                blood: 'bg-red-100 text-red-800',
+                urine: 'bg-yellow-100 text-yellow-800',
+                vitamins: 'bg-green-100 text-green-800',
+                other: 'bg-gray-100 text-gray-800'
+            };
+            return colors[category] || colors.other;
+        }
+
+        function getPriorityColor(days) {
+            if (days >= 3) return 'bg-red-100 text-red-800';
+            if (days >= 2) return 'bg-yellow-100 text-yellow-800';
+            return 'bg-green-100 text-green-800';
+        }
+
+        function getPriorityLabel(days) {
+            if (days >= 3) return 'Urgent';
+            if (days >= 2) return 'High';
+            return 'Normal';
+        }
+
+        function daysSince(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Release lock on page unload
+        window.addEventListener('beforeunload', () => {
+            if (currentRequest) {
+                releaseRequestLock(currentRequest.id);
+            }
+        });
+
+        initReviewRequest();
+    </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Authorization Management System - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+      animation: fade-in 0.3s ease-out;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+  
+  <!-- Header -->
+  <header class="bg-white shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <div class="ml-3">
+            <h1 class="text-xl font-bold text-gray-900">Pre-Authorization System</h1>
+            <p class="text-xs text-gray-500">Medical Laboratory Tests Management</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    
+    <!-- Welcome Section -->
+    <div class="text-center mb-12 animate-fade-in">
+      <h2 class="text-3xl font-bold text-gray-900 mb-2">Welcome to the System</h2>
+      <p class="text-lg text-gray-600">Please select your role to continue</p>
+    </div>
+
+    <!-- Role Selection Cards -->
+    <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+      
+      <!-- Insurance Reviewer Card -->
+      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden animate-fade-in">
+        <div class="bg-gradient-to-r from-blue-500 to-blue-600 p-6">
+          <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2">Insurance Reviewer</h3>
+          <p class="text-blue-100 text-sm">Review and approve pre-authorization requests</p>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-2 mb-6 text-sm text-gray-600">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Review pending requests</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Approve or reject requests</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>View validation results</span>
+            </li>
+          </ul>
+          <button onclick="login('reviewer')" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
+            Login as Reviewer
+          </button>
+        </div>
+      </div>
+
+      <!-- System Administrator Card -->
+      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden animate-fade-in" style="animation-delay: 0.1s;">
+        <div class="bg-gradient-to-r from-purple-500 to-purple-600 p-6">
+          <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2">Administrator</h3>
+          <p class="text-purple-100 text-sm">Manage system settings and database</p>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-2 mb-6 text-sm text-gray-600">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Manage Tests List</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Manage users and roles</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Configure system settings</span>
+            </li>
+          </ul>
+          <button onclick="login('admin')" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
+            Login as Admin
+          </button>
+        </div>
+      </div>
+
+      <!-- Reports Viewer Card -->
+      <div class="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden animate-fade-in" style="animation-delay: 0.2s;">
+        <div class="bg-gradient-to-r from-green-500 to-green-600 p-6">
+          <div class="w-16 h-16 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mb-4">
+            <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-white mb-2">Reports Viewer</h3>
+          <p class="text-green-100 text-sm">View analytics and generate reports</p>
+        </div>
+        <div class="p-6">
+          <ul class="space-y-2 mb-6 text-sm text-gray-600">
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>View dashboards and KPIs</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Generate custom reports</span>
+            </li>
+            <li class="flex items-start">
+              <svg class="w-5 h-5 text-green-500 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+              <span>Export data to Excel/PDF</span>
+            </li>
+          </ul>
+          <button onclick="login('reports_viewer')" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors duration-200">
+            Login as Viewer
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Info Section -->
+    <div class="mt-16 max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+      <h3 class="text-xl font-bold text-gray-900 mb-4">About This System</h3>
+      <p class="text-gray-600 mb-4">
+        The Pre-Authorization Management System streamlines the approval process for medical laboratory tests. 
+        This simulation demonstrates the complete workflow from request submission to approval.
+      </p>
+      <div class="grid md:grid-cols-3 gap-4 mt-6">
+        <div class="text-center p-4 bg-blue-50 rounded-lg">
+          <div class="text-3xl font-bold text-blue-600 mb-1">145+</div>
+          <div class="text-sm text-gray-600">Laboratory Tests</div>
+        </div>
+        <div class="text-center p-4 bg-purple-50 rounded-lg">
+          <div class="text-3xl font-bold text-purple-600 mb-1">60-70%</div>
+          <div class="text-sm text-gray-600">Time Reduction</div>
+        </div>
+        <div class="text-center p-4 bg-green-50 rounded-lg">
+          <div class="text-3xl font-bold text-green-600 mb-1">80%</div>
+          <div class="text-sm text-gray-600">Error Reduction</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="mt-12 pb-8 text-center text-gray-500 text-sm">
+    <p>&copy; 2026 Pre-Authorization Management System. All rights reserved.</p>
+    <p class="mt-1">Frontend Simulation - For Demonstration Purposes Only</p>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="assets/js/mock-data.js"></script>
+  <script src="assets/js/main.js"></script>
+
+</body>
+</html>

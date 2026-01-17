@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>General Settings - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-4xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900">General Settings</h1>
+                    <p class="mt-2 text-gray-600">Configure system-wide settings</p>
+                </div>
+
+                <form id="settingsForm" class="space-y-6">
+                    <!-- System Information -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">System Information</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">System Name</label>
+                                <input type="text" value="Pre-Authorization Management System" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Organization Name</label>
+                                <input type="text" value="Healthcare Organization" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Support Email</label>
+                                <input type="email" value="support@preauth.com" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regional Settings -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Regional Settings</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Default Language</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="en">English</option>
+                                    <option value="ar">Arabic</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Timezone</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="UTC">UTC</option>
+                                    <option value="EST">Eastern Time</option>
+                                    <option value="PST">Pacific Time</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Date Format</label>
+                                <select class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="MM/DD/YYYY">MM/DD/YYYY</option>
+                                    <option value="DD/MM/YYYY">DD/MM/YYYY</option>
+                                    <option value="YYYY-MM-DD">YYYY-MM-DD</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Request Settings -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Request Settings</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Auto-save Interval (seconds)</label>
+                                <input type="number" value="30" min="10" max="300" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Draft Expiration (days)</label>
+                                <input type="number" value="30" min="1" max="365" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" checked class="rounded border-gray-300 text-blue-600">
+                                    <span class="ml-2 text-sm text-gray-700">Allow request editing after submission</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- File Upload Settings -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">File Upload Settings</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Max File Size (MB)</label>
+                                <input type="number" value="10" min="1" max="100" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Allowed File Types</label>
+                                <input type="text" value="PDF, JPG, PNG, DOCX" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-end gap-3">
+                        <button type="button" onclick="resetSettings()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Reset to Defaults</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Settings</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        function initSettings() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+        }
+
+        document.getElementById('settingsForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showToast('Settings saved successfully!', 'success');
+        });
+
+        function resetSettings() {
+            if (confirm('Reset all settings to defaults?')) {
+                showToast('Settings reset to defaults', 'success');
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initSettings();
+    </script>
+</body>
+</html>

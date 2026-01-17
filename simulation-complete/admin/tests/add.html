@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Test - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="AddTest">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="../dashboard.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="list.html" class="border-b-2 border-blue-500 text-gray-900 px-3 py-2 text-sm font-medium">Tests List</a>
+                        <a href="../users/list.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Users</a>
+                        <a href="../settings/general.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Settings</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Admin User</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+        <!-- Breadcrumb -->
+        <nav class="flex mb-6" aria-label="Breadcrumb">
+            <ol class="flex items-center space-x-2">
+                <li><a href="../dashboard.html" class="text-gray-500 hover:text-gray-700">Dashboard</a></li>
+                <li><span class="text-gray-400">/</span></li>
+                <li><a href="list.html" class="text-gray-500 hover:text-gray-700">Tests List</a></li>
+                <li><span class="text-gray-400">/</span></li>
+                <li class="text-gray-900 font-medium">Add New Test</li>
+            </ol>
+        </nav>
+
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Add New Test</h1>
+            <p class="mt-2 text-gray-600">Create a new medical test with complete pre-authorization requirements</p>
+        </div>
+
+        <!-- Form -->
+        <form id="addTestForm" class="space-y-8">
+            <!-- Section 1: Basic Information -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">1</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">Basic Information</h2>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="testCode" class="block text-sm font-medium text-gray-700 mb-2">
+                            Test Code <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="testCode" name="testCode" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., PSA, FT4, TESTO">
+                        <p class="mt-1 text-sm text-gray-500">Uppercase letters, numbers, and dashes only</p>
+                    </div>
+
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                            Category <span class="text-red-500">*</span>
+                        </label>
+                        <select id="category" name="category" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="">Select category...</option>
+                            <option value="hormones">Hormones</option>
+                            <option value="antibodies">Antibodies</option>
+                            <option value="blood">Blood Tests</option>
+                            <option value="urine">Urine Tests</option>
+                            <option value="vitamins">Vitamins</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="testNameEN" class="block text-sm font-medium text-gray-700 mb-2">
+                            Test Name (English) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="testNameEN" name="testNameEN" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., Prostate Specific Antigen">
+                    </div>
+
+                    <div>
+                        <label for="testNameAR" class="block text-sm font-medium text-gray-700 mb-2">
+                            Test Name (Arabic) <span class="text-red-500">*</span>
+                        </label>
+                        <input type="text" id="testNameAR" name="testNameAR" required dir="rtl"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="مستضد البروستاتا النوعي">
+                    </div>
+
+                    <div>
+                        <label for="preAuthRequired" class="block text-sm font-medium text-gray-700 mb-2">
+                            Requires Pre-Authorization? <span class="text-red-500">*</span>
+                        </label>
+                        <select id="preAuthRequired" name="preAuthRequired" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="status" class="block text-sm font-medium text-gray-700 mb-2">
+                            Status <span class="text-red-500">*</span>
+                        </label>
+                        <select id="status" name="status" required
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Clinical Requirements -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">2</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">Clinical Requirements</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Required Clinical Symptoms <span class="text-red-500">*</span>
+                        </label>
+                        <div id="symptomsContainer" class="space-y-2 mb-3">
+                            <div class="flex gap-2">
+                                <input type="text" class="symptom-input flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Enter symptom (e.g., Urinary symptoms)">
+                                <button type="button" onclick="removeSymptom(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addSymptom()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            + Add Symptom
+                        </button>
+                    </div>
+
+                    <div>
+                        <label for="minSymptoms" class="block text-sm font-medium text-gray-700 mb-2">
+                            Minimum Number of Symptoms Required <span class="text-red-500">*</span>
+                        </label>
+                        <input type="number" id="minSymptoms" name="minSymptoms" required min="1" max="20" value="2"
+                            class="w-full md:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <p class="mt-1 text-sm text-gray-500">Patients must select at least this many symptoms</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: ICD-10 Codes -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">3</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">ICD-10 Codes</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Approved ICD-10 Codes <span class="text-red-500">*</span>
+                        </label>
+                        <p class="text-sm text-gray-500 mb-3">Codes that will automatically approve the request</p>
+                        <div id="approvedCodesContainer" class="space-y-2 mb-3">
+                            <div class="flex gap-2">
+                                <input type="text" class="approved-code-input w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Code">
+                                <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Description">
+                                <button type="button" onclick="removeApprovedCode(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addApprovedCode()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            + Add Approved Code
+                        </button>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            Suspected Diagnosis Codes (Optional)
+                        </label>
+                        <p class="text-sm text-gray-500 mb-3">Codes for suspected conditions</p>
+                        <div id="suspectedCodesContainer" class="space-y-2 mb-3">
+                            <div class="flex gap-2">
+                                <input type="text" class="suspected-code-input w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Code">
+                                <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                    placeholder="Description">
+                                <button type="button" onclick="removeSuspectedCode(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+                            </div>
+                        </div>
+                        <button type="button" onclick="addSuspectedCode()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                            + Add Suspected Code
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Restrictions -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">4</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">Age & Gender Restrictions</h2>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Age Restriction</label>
+                        <select id="ageRestrictionType" name="ageRestrictionType" onchange="toggleAgeFields()"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-3">
+                            <option value="none">No Restriction</option>
+                            <option value="min">Minimum Age</option>
+                            <option value="max">Maximum Age</option>
+                            <option value="range">Age Range</option>
+                        </select>
+                        
+                        <div id="ageFieldsContainer" class="hidden space-y-3">
+                            <div id="minAgeField" class="hidden">
+                                <label for="minAge" class="block text-sm text-gray-600 mb-1">Minimum Age</label>
+                                <input type="number" id="minAge" name="minAge" min="0" max="150"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div id="maxAgeField" class="hidden">
+                                <label for="maxAge" class="block text-sm text-gray-600 mb-1">Maximum Age</label>
+                                <input type="number" id="maxAge" name="maxAge" min="0" max="150"
+                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="genderRestriction" class="block text-sm font-medium text-gray-700 mb-2">Gender Restriction</label>
+                        <select id="genderRestriction" name="genderRestriction"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            <option value="both">Both</option>
+                            <option value="male">Male Only</option>
+                            <option value="female">Female Only</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Notes and Guidelines -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">5</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">Notes and Guidelines</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="insuranceNotes" class="block text-sm font-medium text-gray-700 mb-2">Important Insurance Notes</label>
+                        <textarea id="insuranceNotes" name="insuranceNotes" rows="3"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., Do not use words: Routine, Screening. Must have clinical indication."></textarea>
+                        <p class="mt-1 text-sm text-gray-500">Max 1000 characters</p>
+                    </div>
+
+                    <div>
+                        <label for="specialRequirements" class="block text-sm font-medium text-gray-700 mb-2">Special Requirements</label>
+                        <textarea id="specialRequirements" name="specialRequirements" rows="3"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="e.g., Previous test results preferred if available"></textarea>
+                    </div>
+
+                    <div>
+                        <label for="justificationExample" class="block text-sm font-medium text-gray-700 mb-2">Clinical Justification Example</label>
+                        <textarea id="justificationExample" name="justificationExample" rows="4"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Provide an example of a good clinical justification for this test..."></textarea>
+                        <p class="mt-1 text-sm text-gray-500">This will help users write better justifications</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Validation Rules -->
+            <div class="bg-white shadow rounded-lg p-6">
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center justify-center h-10 w-10 rounded-full bg-blue-100 text-blue-600 font-semibold">6</div>
+                    <h2 class="ml-4 text-xl font-semibold text-gray-900">Validation Rules</h2>
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <label for="prohibitedWords" class="block text-sm font-medium text-gray-700 mb-2">Prohibited Words in Justification</label>
+                        <input type="text" id="prohibitedWords" name="prohibitedWords"
+                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            placeholder="Routine, Screening, routine, screening"
+                            value="Routine, Screening, routine, screening">
+                        <p class="mt-1 text-sm text-gray-500">Comma-separated list</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="minJustificationLength" class="block text-sm font-medium text-gray-700 mb-2">Minimum Justification Length (words)</label>
+                            <input type="number" id="minJustificationLength" name="minJustificationLength" min="10" max="500" value="50"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        </div>
+
+                        <div>
+                            <label for="documentsRequired" class="block text-sm font-medium text-gray-700 mb-2">Supporting Documents Required?</label>
+                            <select id="documentsRequired" name="documentsRequired" onchange="toggleDocumentFields()"
+                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <option value="false">No</option>
+                                <option value="true">Yes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="minDocumentsField" class="hidden">
+                        <label for="minDocuments" class="block text-sm font-medium text-gray-700 mb-2">Minimum Number of Documents</label>
+                        <input type="number" id="minDocuments" name="minDocuments" min="1" max="10" value="1"
+                            class="w-full md:w-48 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="flex justify-between items-center pt-6 border-t">
+                <button type="button" onclick="window.location.href='list.html'" class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                    Cancel
+                </button>
+                <div class="space-x-3">
+                    <button type="button" onclick="previewTest()" class="px-6 py-3 border border-blue-600 text-blue-600 rounded-lg hover:bg-blue-50">
+                        Preview
+                    </button>
+                    <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Save Test
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/validation.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script src="../../assets/js/edge-cases.js"></script>
+    <script>
+        // Initialize page
+        function initAddTest() {
+            // Check permissions
+            requirePermission('manage_tests');
+            
+            // Display current user
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Set up form validation
+            setupFormValidation();
+        }
+
+        // Dynamic field management
+        function addSymptom() {
+            const container = document.getElementById('symptomsContainer');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <input type="text" class="symptom-input flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter symptom">
+                <button type="button" onclick="removeSymptom(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeSymptom(btn) {
+            btn.parentElement.remove();
+        }
+
+        function addApprovedCode() {
+            const container = document.getElementById('approvedCodesContainer');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <input type="text" class="approved-code-input w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="Code">
+                <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="Description">
+                <button type="button" onclick="removeApprovedCode(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeApprovedCode(btn) {
+            btn.parentElement.remove();
+        }
+
+        function addSuspectedCode() {
+            const container = document.getElementById('suspectedCodesContainer');
+            const div = document.createElement('div');
+            div.className = 'flex gap-2';
+            div.innerHTML = `
+                <input type="text" class="suspected-code-input w-32 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="Code">
+                <input type="text" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                    placeholder="Description">
+                <button type="button" onclick="removeSuspectedCode(this)" class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200">Remove</button>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeSuspectedCode(btn) {
+            btn.parentElement.remove();
+        }
+
+        function toggleAgeFields() {
+            const type = document.getElementById('ageRestrictionType').value;
+            const container = document.getElementById('ageFieldsContainer');
+            const minField = document.getElementById('minAgeField');
+            const maxField = document.getElementById('maxAgeField');
+            
+            container.classList.add('hidden');
+            minField.classList.add('hidden');
+            maxField.classList.add('hidden');
+            
+            if (type !== 'none') {
+                container.classList.remove('hidden');
+                if (type === 'min' || type === 'range') {
+                    minField.classList.remove('hidden');
+                }
+                if (type === 'max' || type === 'range') {
+                    maxField.classList.remove('hidden');
+                }
+            }
+        }
+
+        function toggleDocumentFields() {
+            const required = document.getElementById('documentsRequired').value === 'true';
+            const field = document.getElementById('minDocumentsField');
+            if (required) {
+                field.classList.remove('hidden');
+            } else {
+                field.classList.add('hidden');
+            }
+        }
+
+        function setupFormValidation() {
+            const form = document.getElementById('addTestForm');
+            
+            // Real-time validation for test code
+            const testCodeField = document.getElementById('testCode');
+            testCodeField.addEventListener('blur', function() {
+                const value = this.value.toUpperCase();
+                this.value = value;
+                
+                if (value && !isTestCodeUnique(value)) {
+                    showToast('Test code already exists', 'error');
+                    this.classList.add('border-red-500');
+                } else {
+                    this.classList.remove('border-red-500');
+                }
+            });
+            
+            // Form submission
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveTest();
+            });
+        }
+
+        function saveTest() {
+            // Collect form data
+            const formData = {
+                testCode: document.getElementById('testCode').value.toUpperCase(),
+                testNameEN: document.getElementById('testNameEN').value,
+                testNameAR: document.getElementById('testNameAR').value,
+                category: document.getElementById('category').value,
+                preAuthRequired: document.getElementById('preAuthRequired').value === 'true',
+                status: document.getElementById('status').value,
+                
+                // Symptoms
+                symptoms: Array.from(document.querySelectorAll('.symptom-input'))
+                    .map(input => input.value.trim())
+                    .filter(v => v),
+                minSymptoms: parseInt(document.getElementById('minSymptoms').value),
+                
+                // ICD-10 codes
+                approvedCodes: Array.from(document.querySelectorAll('.approved-code-input'))
+                    .map(input => input.value.trim())
+                    .filter(v => v),
+                suspectedCodes: Array.from(document.querySelectorAll('.suspected-code-input'))
+                    .map(input => input.value.trim())
+                    .filter(v => v),
+                
+                // Restrictions
+                ageRestrictionType: document.getElementById('ageRestrictionType').value,
+                minAge: document.getElementById('minAge')?.value,
+                maxAge: document.getElementById('maxAge')?.value,
+                genderRestriction: document.getElementById('genderRestriction').value,
+                
+                // Notes
+                insuranceNotes: document.getElementById('insuranceNotes').value,
+                specialRequirements: document.getElementById('specialRequirements').value,
+                justificationExample: document.getElementById('justificationExample').value,
+                
+                // Validation rules
+                prohibitedWords: document.getElementById('prohibitedWords').value,
+                minJustificationLength: parseInt(document.getElementById('minJustificationLength').value),
+                documentsRequired: document.getElementById('documentsRequired').value === 'true',
+                minDocuments: document.getElementById('minDocuments')?.value
+            };
+            
+            // Validate
+            if (!formData.testCode) {
+                showToast('Test code is required', 'error');
+                return;
+            }
+            
+            if (!isTestCodeUnique(formData.testCode)) {
+                showToast('Test code already exists', 'error');
+                return;
+            }
+            
+            if (formData.symptoms.length === 0 && formData.preAuthRequired) {
+                showToast('At least one symptom is required for pre-authorization tests', 'error');
+                return;
+            }
+            
+            if (formData.approvedCodes.length === 0 && formData.preAuthRequired) {
+                showToast('At least one approved ICD-10 code is required for pre-authorization tests', 'error');
+                return;
+            }
+            
+            // Create new test
+            const newTest = {
+                id: `TEST-${String(mockTests.length + 1).padStart(3, '0')}`,
+                code: formData.testCode,
+                nameEN: formData.testNameEN,
+                nameAR: formData.testNameAR,
+                category: formData.category,
+                status: formData.status,
+                preAuthRequired: formData.preAuthRequired,
+                clinicalSymptoms: formData.symptoms,
+                minSymptoms: formData.minSymptoms,
+                icd10CodesApproved: formData.approvedCodes,
+                icd10CodesSuspected: formData.suspectedCodes,
+                ageRestriction: {
+                    type: formData.ageRestrictionType,
+                    min: formData.minAge,
+                    max: formData.maxAge
+                },
+                genderRestriction: formData.genderRestriction,
+                insuranceNotes: formData.insuranceNotes,
+                specialRequirements: formData.specialRequirements,
+                justificationExample: formData.justificationExample,
+                prohibitedWords: formData.prohibitedWords.split(',').map(w => w.trim()),
+                minJustificationLength: formData.minJustificationLength,
+                documentsRequired: formData.documentsRequired,
+                minDocuments: formData.minDocuments,
+                createdDate: new Date().toISOString().split('T')[0],
+                updatedDate: new Date().toISOString().split('T')[0],
+                updatedBy: getCurrentUser()?.nameEN
+            };
+            
+            // Add to mock data
+            mockTests.push(newTest);
+            
+            // Log activity
+            logActivity({
+                timestamp: new Date().toISOString(),
+                user: getCurrentUser()?.nameEN,
+                action: 'Added new test',
+                details: `Test: ${newTest.nameEN} (${newTest.code})`,
+                type: 'test_management'
+            });
+            
+            // Show success and redirect
+            showToast('Test created successfully!', 'success');
+            setTimeout(() => {
+                window.location.href = 'list.html';
+            }, 1500);
+        }
+
+        function previewTest() {
+            // Collect current form data and show summary
+            const testCode = document.getElementById('testCode').value;
+            const testName = document.getElementById('testNameEN').value;
+            if (!testCode || !testName) {
+                showToast('Please fill in test code and name first', 'warning');
+                return;
+            }
+            showToast(`Preview: ${testName} (${testCode})`, 'info');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Initialize on page load
+        initAddTest();
+    </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit ICD-10 Code - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-8">
+                    <h1 class="text-3xl font-bold text-gray-900" id="pageTitle">Add ICD-10 Code</h1>
+                    <p class="mt-2 text-gray-600">Add a new ICD-10 diagnostic code to the library</p>
+                </div>
+
+                <form id="icd10Form" class="space-y-6">
+                    <!-- Code Information -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Code Information</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">ICD-10 Code *</label>
+                                <input type="text" id="code" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="e.g., E11.9">
+                                <p class="text-xs text-gray-500 mt-1">Format: Letter + digits (e.g., E11.9, I10)</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Category *</label>
+                                <select id="category" required class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="">Select category...</option>
+                                    <option value="endocrine">Endocrine, Nutritional and Metabolic Diseases</option>
+                                    <option value="circulatory">Diseases of the Circulatory System</option>
+                                    <option value="respiratory">Diseases of the Respiratory System</option>
+                                    <option value="digestive">Diseases of the Digestive System</option>
+                                    <option value="musculoskeletal">Diseases of the Musculoskeletal System</option>
+                                    <option value="nervous">Diseases of the Nervous System</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description (English) -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Description (English) *</h2>
+                        <textarea id="descriptionEN" required rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="Enter English description..."></textarea>
+                    </div>
+
+                    <!-- Description (Arabic) -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Description (Arabic)</h2>
+                        <textarea id="descriptionAR" rows="3" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500" placeholder="أدخل الوصف بالعربية..." dir="rtl"></textarea>
+                    </div>
+
+                    <!-- Additional Information -->
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <h2 class="text-lg font-semibold text-gray-900 mb-4">Additional Information</h2>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                                <select id="status" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Notes</label>
+                                <textarea id="notes" rows="2" class="w-full px-4 py-2 border border-gray-300 rounded-lg" placeholder="Any additional notes or comments..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-between">
+                        <button type="button" onclick="goBack()" class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">← Back</button>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Save Code</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/validation.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const codeParam = urlParams.get('code');
+        let isEdit = false;
+
+        function initICD10Form() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            if (codeParam) {
+                isEdit = true;
+                document.getElementById('pageTitle').textContent = 'Edit ICD-10 Code';
+                loadCode(codeParam);
+            }
+        }
+
+        function loadCode(code) {
+            const icd10Code = mockICD10Codes.find(c => c.code === code);
+            if (!icd10Code) {
+                showToast('Code not found', 'error');
+                setTimeout(() => window.location.href = 'list.html', 2000);
+                return;
+            }
+            
+            document.getElementById('code').value = icd10Code.code;
+            document.getElementById('code').readOnly = true;
+            document.getElementById('category').value = icd10Code.category;
+            document.getElementById('descriptionEN').value = icd10Code.descriptionEN;
+            document.getElementById('descriptionAR').value = icd10Code.descriptionAR || '';
+            document.getElementById('status').value = icd10Code.status || 'active';
+            document.getElementById('notes').value = icd10Code.notes || '';
+        }
+
+        document.getElementById('icd10Form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const code = document.getElementById('code').value.trim();
+            const category = document.getElementById('category').value;
+            const descriptionEN = document.getElementById('descriptionEN').value.trim();
+            const descriptionAR = document.getElementById('descriptionAR').value.trim();
+            const status = document.getElementById('status').value;
+            const notes = document.getElementById('notes').value.trim();
+            
+            // Validate ICD-10 code format
+            const codePattern = /^[A-Z]\d{2}(\.\d{1,2})?$/;
+            if (!codePattern.test(code)) {
+                showToast('Invalid ICD-10 code format', 'error');
+                return;
+            }
+            
+            // Check for duplicates (only for new codes)
+            if (!isEdit && mockICD10Codes.some(c => c.code === code)) {
+                showToast('Code already exists', 'error');
+                return;
+            }
+            
+            const user = getCurrentUser();
+            const icd10Data = {
+                code,
+                category,
+                descriptionEN,
+                descriptionAR,
+                status,
+                notes,
+                addedBy: user?.nameEN,
+                addedDate: new Date().toISOString()
+            };
+            
+            if (isEdit) {
+                const index = mockICD10Codes.findIndex(c => c.code === code);
+                if (index !== -1) {
+                    mockICD10Codes[index] = {...mockICD10Codes[index], ...icd10Data};
+                }
+                showToast('ICD-10 code updated successfully!', 'success');
+            } else {
+                mockICD10Codes.push(icd10Data);
+                showToast('ICD-10 code added successfully!', 'success');
+            }
+            
+            setTimeout(() => window.location.href = 'list.html', 1500);
+        });
+
+        function goBack() {
+            window.location.href = 'list.html';
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initICD10Form();
+    </script>
+</body>
+</html>

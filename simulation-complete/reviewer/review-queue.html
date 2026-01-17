@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Queue - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="ReviewQueue">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="review-queue.html" class="border-b-2 border-blue-500 text-gray-900 px-3 py-2 text-sm font-medium">Review Queue</a>
+                        <a href="my-reviews.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">My Reviews</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Reviewer</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900">Review Queue</h1>
+            <p class="mt-2 text-gray-600">Review and process pre-authorization requests</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow mb-6 p-6">
+            <h2 class="text-lg font-semibold text-gray-900 mb-4">Filters</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-4">
+                <!-- Search -->
+                <div class="md:col-span-2">
+                    <label for="searchRequests" class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                    <div class="relative">
+                        <input type="text" id="searchRequests" placeholder="Request ID or patient name..."
+                            class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <svg class="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Status Filter -->
+                <div>
+                    <label for="filterStatus" class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                    <select id="filterStatus" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Statuses</option>
+                        <option value="submitted">Submitted</option>
+                        <option value="under_review">Under Review</option>
+                        <option value="more_info_needed">More Info Needed</option>
+                    </select>
+                </div>
+
+                <!-- Priority Filter -->
+                <div>
+                    <label for="filterPriority" class="block text-sm font-medium text-gray-700 mb-2">Priority</label>
+                    <select id="filterPriority" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Priorities</option>
+                        <option value="urgent">Urgent (3+ days)</option>
+                        <option value="high">High (2+ days)</option>
+                        <option value="normal">Normal</option>
+                    </select>
+                </div>
+
+                <!-- Test Category -->
+                <div>
+                    <label for="filterCategory" class="block text-sm font-medium text-gray-700 mb-2">Test Category</label>
+                    <select id="filterCategory" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <option value="">All Categories</option>
+                        <option value="hormones">Hormones</option>
+                        <option value="antibodies">Antibodies</option>
+                        <option value="blood">Blood Tests</option>
+                        <option value="urine">Urine Tests</option>
+                        <option value="vitamins">Vitamins</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Date Range -->
+                <div>
+                    <label for="dateFrom" class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" id="dateFrom" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <div>
+                    <label for="dateTo" class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" id="dateTo" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <!-- Assigned To Me -->
+                <div class="flex items-end">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="filterAssignedToMe" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <span class="ml-2 text-sm text-gray-700">Assigned to me only</span>
+                    </label>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-end gap-2">
+                    <button onclick="applyFilters()" class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                        Apply
+                    </button>
+                    <button onclick="clearFilters()" class="px-4 py-2 text-gray-600 hover:text-gray-900">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Summary -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center">
+                    <svg class="h-5 w-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-sm text-blue-800">
+                        Showing <span class="font-semibold" id="showingFrom">1</span> to <span class="font-semibold" id="showingTo">10</span> of <span class="font-semibold" id="totalCount">0</span> requests
+                    </span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-blue-800">Sort by:</span>
+                    <select id="sortBy" onchange="applyFilters()" class="px-3 py-1 border border-blue-300 rounded bg-white text-sm">
+                        <option value="date_desc">Newest First</option>
+                        <option value="date_asc">Oldest First</option>
+                        <option value="priority">Priority</option>
+                        <option value="patient">Patient Name</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Requests Table -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Request ID</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Patient</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Test</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Submitted</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Priority</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requestsTableBody" class="bg-white divide-y divide-gray-200">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination -->
+            <div class="bg-gray-50 px-6 py-4 flex items-center justify-between border-t border-gray-200">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    <button onclick="previousPage()" class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </button>
+                    <button onclick="nextPage()" class="ml-3 px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </button>
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div>
+                        <p class="text-sm text-gray-700">
+                            Page <span class="font-medium" id="currentPageNum">1</span> of <span class="font-medium" id="totalPages">1</span>
+                        </p>
+                    </div>
+                    <div>
+                        <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" id="paginationNav">
+                            <!-- Populated by JavaScript -->
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        let currentPage = 1;
+        const itemsPerPage = 10;
+        let filteredRequests = [];
+
+        function initReviewQueue() {
+            requirePermission('view_requests');
+            
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            // Set default date range (last 30 days)
+            const today = new Date();
+            const thirtyDaysAgo = new Date(today.getTime() - (30 * 24 * 60 * 60 * 1000));
+            document.getElementById('dateTo').valueAsDate = today;
+            document.getElementById('dateFrom').valueAsDate = thirtyDaysAgo;
+            
+            applyFilters();
+            
+            // Set up real-time search
+            document.getElementById('searchRequests').addEventListener('input', debounce(applyFilters, 300));
+            document.getElementById('filterStatus').addEventListener('change', applyFilters);
+            document.getElementById('filterPriority').addEventListener('change', applyFilters);
+            document.getElementById('filterCategory').addEventListener('change', applyFilters);
+            document.getElementById('filterAssignedToMe').addEventListener('change', applyFilters);
+        }
+
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchRequests').value.toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const priority = document.getElementById('filterPriority').value;
+            const category = document.getElementById('filterCategory').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            const assignedToMe = document.getElementById('filterAssignedToMe').checked;
+            const sortBy = document.getElementById('sortBy').value;
+            const currentUser = getCurrentUser();
+            
+            // Filter requests
+            filteredRequests = mockRequests.filter(req => {
+                // Only show reviewable statuses
+                if (!['submitted', 'under_review', 'more_info_needed'].includes(req.status)) {
+                    return false;
+                }
+                
+                // Search filter
+                const matchesSearch = !searchTerm || 
+                    req.id.toLowerCase().includes(searchTerm) ||
+                    req.patientName.toLowerCase().includes(searchTerm);
+                
+                // Status filter
+                const matchesStatus = !status || req.status === status;
+                
+                // Priority filter
+                const days = daysSince(req.submittedDate);
+                let matchesPriority = true;
+                if (priority === 'urgent') matchesPriority = days >= 3;
+                else if (priority === 'high') matchesPriority = days >= 2 && days < 3;
+                else if (priority === 'normal') matchesPriority = days < 2;
+                
+                // Category filter
+                const test = getTestById(req.testId);
+                const matchesCategory = !category || (test && test.category === category);
+                
+                // Date range filter
+                const reqDate = new Date(req.submittedDate);
+                const matchesDateFrom = !dateFrom || reqDate >= new Date(dateFrom);
+                const matchesDateTo = !dateTo || reqDate <= new Date(dateTo);
+                
+                // Assigned to me filter
+                const matchesAssigned = !assignedToMe || req.reviewer === currentUser?.nameEN;
+                
+                return matchesSearch && matchesStatus && matchesPriority && matchesCategory && 
+                       matchesDateFrom && matchesDateTo && matchesAssigned;
+            });
+            
+            // Sort requests
+            filteredRequests.sort((a, b) => {
+                switch (sortBy) {
+                    case 'date_desc':
+                        return new Date(b.submittedDate) - new Date(a.submittedDate);
+                    case 'date_asc':
+                        return new Date(a.submittedDate) - new Date(b.submittedDate);
+                    case 'priority':
+                        return daysSince(b.submittedDate) - daysSince(a.submittedDate);
+                    case 'patient':
+                        return a.patientName.localeCompare(b.patientName);
+                    default:
+                        return 0;
+                }
+            });
+            
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchRequests').value = '';
+            document.getElementById('filterStatus').value = '';
+            document.getElementById('filterPriority').value = '';
+            document.getElementById('filterCategory').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            document.getElementById('filterAssignedToMe').checked = false;
+            document.getElementById('sortBy').value = 'date_desc';
+            applyFilters();
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('requestsTableBody');
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageRequests = filteredRequests.slice(start, end);
+            
+            if (pageRequests.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="px-6 py-12 text-center text-gray-500">
+                            <svg class="mx-auto h-12 w-12 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <p class="text-lg font-medium">No requests found</p>
+                            <p class="mt-1">Try adjusting your filters</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = pageRequests.map(req => {
+                const test = getTestById(req.testId);
+                const days = daysSince(req.submittedDate);
+                
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="font-mono text-sm font-semibold text-gray-900">${req.id}</span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm font-medium text-gray-900">${req.patientName}</div>
+                            <div class="text-sm text-gray-500">ID: ${req.patientId}</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-gray-900">${req.testName}</div>
+                            <div class="text-sm text-gray-500">${test?.code || 'N/A'}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${getCategoryColor(test?.category)}">
+                                ${test?.category || 'N/A'}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${formatDate(req.submittedDate)}</div>
+                            <div class="text-sm text-gray-500">${days} day${days !== 1 ? 's' : ''} ago</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(req.status)}">
+                                ${getStatusLabel(req.status)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 py-1 text-xs font-semibold rounded-full ${getPriorityColor(days)}">
+                                ${getPriorityLabel(days)}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="reviewRequest('${req.id}')" class="text-blue-600 hover:text-blue-900">Review</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            // Update showing count
+            document.getElementById('showingFrom').textContent = start + 1;
+            document.getElementById('showingTo').textContent = Math.min(end, filteredRequests.length);
+            document.getElementById('totalCount').textContent = filteredRequests.length;
+        }
+
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+            const nav = document.getElementById('paginationNav');
+            
+            document.getElementById('currentPageNum').textContent = currentPage;
+            document.getElementById('totalPages').textContent = totalPages;
+            
+            let html = '';
+            
+            html += `
+                <button onclick="previousPage()" ${currentPage === 1 ? 'disabled' : ''} 
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === 1 ? 'opacity-50 cursor-not-allowed' : ''}">
+                    Previous
+                </button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <button onclick="goToPage(${i})" 
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium ${i === currentPage ? 'text-blue-600 bg-blue-50' : 'text-gray-700 hover:bg-gray-50'}">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += `<span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>`;
+                }
+            }
+            
+            html += `
+                <button onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''} 
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 ${currentPage === totalPages ? 'opacity-50 cursor-not-allowed' : ''}">
+                    Next
+                </button>
+            `;
+            
+            nav.innerHTML = html;
+        }
+
+        function getCategoryColor(category) {
+            const colors = {
+                hormones: 'bg-purple-100 text-purple-800',
+                antibodies: 'bg-blue-100 text-blue-800',
+                blood: 'bg-red-100 text-red-800',
+                urine: 'bg-yellow-100 text-yellow-800',
+                vitamins: 'bg-green-100 text-green-800',
+                other: 'bg-gray-100 text-gray-800'
+            };
+            return colors[category] || colors.other;
+        }
+
+        function getPriorityColor(days) {
+            if (days >= 3) return 'bg-red-100 text-red-800';
+            if (days >= 2) return 'bg-yellow-100 text-yellow-800';
+            return 'bg-green-100 text-green-800';
+        }
+
+        function getPriorityLabel(days) {
+            if (days >= 3) return 'Urgent';
+            if (days >= 2) return 'High';
+            return 'Normal';
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+                renderPagination();
+            }
+        }
+
+        function nextPage() {
+            const totalPages = Math.ceil(filteredRequests.length / itemsPerPage);
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderTable();
+                renderPagination();
+            }
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            renderTable();
+            renderPagination();
+        }
+
+        function reviewRequest(requestId) {
+            window.location.href = `review-request.html?id=${requestId}`;
+        }
+
+        function daysSince(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diff = now - date;
+            return Math.floor(diff / (1000 * 60 * 60 * 24));
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        initReviewQueue();
+    </script>
+    </div>
+</body>
+</html>

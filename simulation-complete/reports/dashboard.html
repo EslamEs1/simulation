@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Dashboard - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50" data-page="ReportsDashboard">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 flex items-center">
+                        <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                        <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                    </div>
+                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        <a href="dashboard.html" class="border-b-2 border-blue-500 text-gray-900 px-3 py-2 text-sm font-medium">Dashboard</a>
+                        <a href="requests-report.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Requests</a>
+                        <a href="performance-report.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Performance</a>
+                        <a href="tests-report.html" class="text-gray-500 hover:text-gray-900 px-3 py-2 text-sm font-medium">Tests</a>
+                    </div>
+                </div>
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700 mr-4" id="currentUserName">Reports Viewer</span>
+                    <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+        <div class="max-w-7xl mx-auto">
+        <!-- Header -->
+        <div class="mb-8 flex justify-between items-center">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+                <p class="mt-2 text-gray-600">System-wide statistics and insights</p>
+            </div>
+            <button onclick="exportAllReports()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Export All
+            </button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-blue-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Total Requests</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalRequests">0</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm text-green-600">+12% from last month</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-green-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Approved</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="approvedRequests">0</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm text-gray-500" id="approvalPercentage">0%</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-red-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Rejected</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="rejectedRequests">0</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm text-gray-500" id="rejectionPercentage">0%</span>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0 bg-yellow-100 rounded-lg p-3">
+                        <svg class="h-6 w-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-500">Avg Review Time</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="avgReviewTime">0</p>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <span class="text-sm text-gray-500">hours</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <!-- Requests by Status -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Requests by Status</h3>
+                <div class="space-y-3">
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Approved</span>
+                            <span class="font-semibold" id="approvedCount">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="approvedBar" class="bg-green-600 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Rejected</span>
+                            <span class="font-semibold" id="rejectedCount">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="rejectedBar" class="bg-red-600 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Under Review</span>
+                            <span class="font-semibold" id="underReviewCount">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="underReviewBar" class="bg-yellow-600 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-600">Submitted</span>
+                            <span class="font-semibold" id="submittedCount">0</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div id="submittedBar" class="bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Requested Tests -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top Requested Tests</h3>
+                <div class="space-y-3" id="topTestsList">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reports -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-900">Quick Reports</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <button onclick="window.location.href='requests-report.html'" class="flex items-center justify-between p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <div class="flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            <span class="ml-3 text-sm font-medium text-gray-700">Requests Report</span>
+                        </div>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <button onclick="window.location.href='performance-report.html'" class="flex items-center justify-between p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <div class="flex items-center">
+                            <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                            <span class="ml-3 text-sm font-medium text-gray-700">Performance Report</span>
+                        </div>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+
+                    <button onclick="window.location.href='tests-report.html'" class="flex items-center justify-between p-4 border border-gray-300 rounded-lg hover:bg-gray-50">
+                        <div class="flex items-center">
+                            <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                            <span class="ml-3 text-sm font-medium text-gray-700">Tests Report</span>
+                        </div>
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <!-- Scripts -->
+    <script src="../assets/js/mock-data-complete.js"></script>
+    <script src="../assets/js/validation.js"></script>
+    <script src="../assets/js/state-management.js"></script>
+    <script src="../assets/js/sidebar.js"></script>
+    <script src="../assets/js/edge-cases.js"></script>
+    <script>
+        function initReportsDashboard() {
+            requirePermission('view_reports');
+            
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.nameEN;
+            }
+            
+            updateStatistics();
+            loadTopTests();
+        }
+
+        function updateStatistics() {
+            const total = mockRequests.length;
+            const approved = mockRequests.filter(r => r.status === 'approved').length;
+            const rejected = mockRequests.filter(r => r.status === 'rejected').length;
+            const underReview = mockRequests.filter(r => r.status === 'under_review').length;
+            const submitted = mockRequests.filter(r => r.status === 'submitted').length;
+            
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('approvedRequests').textContent = approved;
+            document.getElementById('rejectedRequests').textContent = rejected;
+            
+            const approvalRate = total > 0 ? Math.round((approved / total) * 100) : 0;
+            const rejectionRate = total > 0 ? Math.round((rejected / total) * 100) : 0;
+            
+            document.getElementById('approvalPercentage').textContent = approvalRate + '% approval rate';
+            document.getElementById('rejectionPercentage').textContent = rejectionRate + '% rejection rate';
+            document.getElementById('avgReviewTime').textContent = '24';
+            
+            // Update status bars
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+            document.getElementById('underReviewCount').textContent = underReview;
+            document.getElementById('submittedCount').textContent = submitted;
+            
+            const approvedPercent = total > 0 ? (approved / total) * 100 : 0;
+            const rejectedPercent = total > 0 ? (rejected / total) * 100 : 0;
+            const underReviewPercent = total > 0 ? (underReview / total) * 100 : 0;
+            const submittedPercent = total > 0 ? (submitted / total) * 100 : 0;
+            
+            document.getElementById('approvedBar').style.width = approvedPercent + '%';
+            document.getElementById('rejectedBar').style.width = rejectedPercent + '%';
+            document.getElementById('underReviewBar').style.width = underReviewPercent + '%';
+            document.getElementById('submittedBar').style.width = submittedPercent + '%';
+        }
+
+        function loadTopTests() {
+            // Count requests per test
+            const testCounts = {};
+            mockRequests.forEach(req => {
+                testCounts[req.testName] = (testCounts[req.testName] || 0) + 1;
+            });
+            
+            // Sort and get top 5
+            const topTests = Object.entries(testCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+            
+            const container = document.getElementById('topTestsList');
+            const maxCount = topTests[0]?.[1] || 1;
+            
+            container.innerHTML = topTests.map(([testName, count]) => {
+                const percentage = (count / maxCount) * 100;
+                return `
+                    <div>
+                        <div class="flex justify-between text-sm mb-1">
+                            <span class="text-gray-700">${testName}</span>
+                            <span class="font-semibold">${count}</span>
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function exportAllReports() {
+            showToast('Exporting all reports...', 'info');
+            setTimeout(() => {
+                showToast('Reports exported successfully', 'success');
+            }, 1500);
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {
+                success: 'bg-green-600 text-white',
+                error: 'bg-red-600 text-white',
+                warning: 'bg-yellow-600 text-white',
+                info: 'bg-blue-600 text-white'
+            };
+            
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        initReportsDashboard();
+    </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICD-10 Library - Pre-Authorization System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="sidebarContainer"></div>
+    <div class="lg:ml-64">
+        <nav class="bg-white shadow-sm border-b fixed top-0 left-0 right-0 z-30">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 lg:ml-64">
+                <div class="flex justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 flex items-center">
+                            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            <span class="ml-2 text-xl font-semibold text-gray-900">Pre-Auth System</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center">
+                        <span class="text-sm text-gray-700 mr-4" id="currentUserName">User</span>
+                        <button onclick="logout()" class="text-sm text-red-600 hover:text-red-800">Logout</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="pt-16 px-4 sm:px-6 lg:px-8 py-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="mb-8 flex justify-between items-center">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900">ICD-10 Code Library</h1>
+                        <p class="mt-2 text-gray-600">Manage ICD-10 diagnostic codes</p>
+                    </div>
+                    <button onclick="addCode()" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">+ Add ICD-10 Code</button>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Total Codes</p>
+                        <p class="text-2xl font-bold text-gray-900" id="totalCodes">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Active</p>
+                        <p class="text-2xl font-bold text-green-600" id="activeCodes">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Categories</p>
+                        <p class="text-2xl font-bold text-blue-600" id="categoriesCount">0</p>
+                    </div>
+                    <div class="bg-white rounded-lg shadow p-6">
+                        <p class="text-sm text-gray-600">Recently Added</p>
+                        <p class="text-2xl font-bold text-purple-600" id="recentCount">0</p>
+                    </div>
+                </div>
+
+                <!-- Filters -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <div class="grid grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Search</label>
+                            <input type="text" id="searchInput" onkeyup="filterCodes()" placeholder="Search code or description..." class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select id="categoryFilter" onchange="filterCodes()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Categories</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                            <select id="statusFilter" onchange="filterCodes()" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+                                <option value="">All Status</option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="exportCodes()" class="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Export CSV</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <div class="bg-white rounded-lg shadow overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Code</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description (EN)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Description (AR)</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="codesTable" class="bg-white divide-y divide-gray-200"></tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div class="mt-4 flex justify-between items-center">
+                    <p class="text-sm text-gray-700">Showing <span id="showingCount">0</span> of <span id="totalCount">0</span> codes</p>
+                    <div class="flex gap-2">
+                        <button onclick="previousPage()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Previous</button>
+                        <button onclick="nextPage()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" class="hidden fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50"></div>
+
+    <script src="../../assets/js/mock-data-complete.js"></script>
+    <script src="../../assets/js/validation.js"></script>
+    <script src="../../assets/js/state-management.js"></script>
+    <script src="../../assets/js/sidebar.js"></script>
+    <script>
+        let allCodes = [];
+        let filteredCodes = [];
+        let currentPage = 1;
+        const perPage = 20;
+
+        function initICD10Library() {
+            const user = getCurrentUser();
+            if (user) document.getElementById('currentUserName').textContent = user.nameEN;
+            
+            allCodes = mockICD10Codes || [];
+            updateStats();
+            populateFilters();
+            filterCodes();
+        }
+
+        function updateStats() {
+            document.getElementById('totalCodes').textContent = allCodes.length;
+            document.getElementById('activeCodes').textContent = allCodes.filter(c => c.status === 'active').length;
+            
+            const categories = [...new Set(allCodes.map(c => c.category))];
+            document.getElementById('categoriesCount').textContent = categories.length;
+            
+            const recent = allCodes.filter(c => {
+                const added = new Date(c.addedDate || Date.now());
+                const weekAgo = new Date();
+                weekAgo.setDate(weekAgo.getDate() - 7);
+                return added > weekAgo;
+            });
+            document.getElementById('recentCount').textContent = recent.length;
+        }
+
+        function populateFilters() {
+            const categories = [...new Set(allCodes.map(c => c.category))];
+            const categoryFilter = document.getElementById('categoryFilter');
+            categories.forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                categoryFilter.appendChild(option);
+            });
+        }
+
+        function filterCodes() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const status = document.getElementById('statusFilter').value;
+            
+            filteredCodes = allCodes.filter(code => {
+                if (search && !code.code.toLowerCase().includes(search) && !code.descriptionEN.toLowerCase().includes(search)) return false;
+                if (category && code.category !== category) return false;
+                if (status && code.status !== status) return false;
+                return true;
+            });
+            
+            currentPage = 1;
+            renderTable();
+        }
+
+        function renderTable() {
+            const start = (currentPage - 1) * perPage;
+            const end = start + perPage;
+            const pageCodes = filteredCodes.slice(start, end);
+            
+            const tbody = document.getElementById('codesTable');
+            tbody.innerHTML = pageCodes.map(code => `
+                <tr class="hover:bg-gray-50">
+                    <td class="px-6 py-4 text-sm font-mono font-medium text-gray-900">${code.code}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${code.descriptionEN}</td>
+                    <td class="px-6 py-4 text-sm text-gray-900">${code.descriptionAR || '-'}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500">${code.category}</td>
+                    <td class="px-6 py-4 text-sm">
+                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${code.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}">
+                            ${code.status || 'active'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 text-sm">
+                        <button onclick="editCode('${code.code}')" class="text-blue-600 hover:text-blue-800 mr-3">Edit</button>
+                        <button onclick="deleteCode('${code.code}')" class="text-red-600 hover:text-red-800">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('showingCount').textContent = pageCodes.length;
+            document.getElementById('totalCount').textContent = filteredCodes.length;
+        }
+
+        function previousPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                renderTable();
+            }
+        }
+
+        function nextPage() {
+            if (currentPage * perPage < filteredCodes.length) {
+                currentPage++;
+                renderTable();
+            }
+        }
+
+        function addCode() {
+            window.location.href = 'add.html';
+        }
+
+        function editCode(code) {
+            window.location.href = `add.html?code=${code}`;
+        }
+
+        function deleteCode(code) {
+            if (confirm(`Delete ICD-10 code ${code}?`)) {
+                showToast('Code deleted successfully', 'success');
+                setTimeout(() => location.reload(), 1000);
+            }
+        }
+
+        function exportCodes() {
+            const csv = 'Code,Description (EN),Description (AR),Category,Status\n' + 
+                filteredCodes.map(c => `${c.code},"${c.descriptionEN}","${c.descriptionAR || ''}",${c.category},${c.status || 'active'}`).join('\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'icd10_codes.csv';
+            a.click();
+            showToast('Codes exported successfully', 'success');
+        }
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const colors = {success: 'bg-green-600 text-white', error: 'bg-red-600 text-white', info: 'bg-blue-600 text-white'};
+            toast.className = `fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg z-50 ${colors[type]}`;
+            toast.textContent = message;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        initICD10Library();
+    </script>
+</body>
+</html>
